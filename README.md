@@ -17,6 +17,10 @@ By the end of this workshop, you will be able to:
 - identify areas to optimize mapping
 - Define own mapping
 
+define your own mappings to optimize the performance of your cluster
+Defining your own mappings will make indexing and searching more efficient.
+
+
 ## Resources
 
 [Table of Contents: Beginner's Crash Course to Elastic Stack](https://github.com/LisaHJung/Beginners-Crash-Course-to-the-Elastic-Stack-Series): 
