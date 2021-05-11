@@ -2,6 +2,23 @@
 ## Part 5: Understanding Mapping with Elasticsearch and Kibana
 Welcome to the Beginner's Crash Course to Elastic Stack!
 
+```
+PUT test_index/_doc/1
+{
+  "name": "Pineapple",
+  "quantity": 200,
+  "unit_price": 1.3,
+  "description": "a large juicy tropical fruit consisting of aromatic edible yellow flesh surrounded by a tough segmented skin and topped with a tuft of stiff leaves.",
+  "vendor_details": {
+    "vendor": "Diversificados De Costa Rica Dicori S.A.",
+    "main_contact": "Mavis Luis Fallas",
+    "phone_number": "011-506-2479-2000",
+    "country": "Costa Rica",
+    "date_received": "2020-06-02T12:15:35",
+    "preferred vendor": true
+  }
+}
+```
 This repo contains all resources shared during Part 5: Understanding Mapping with Elasticsearch and Kibana.
 
 Have you ever encountered an error “Field type is not supported for [whatever you are trying to do with Elasticsearch]”?
