@@ -37,7 +37,6 @@ By the end of this workshop, you will be able to:
 define your own mappings to optimize the performance of your cluster
 Defining your own mappings will make indexing and searching more efficient.
 
-
 ## Resources
 
 [Table of Contents: Beginner's Crash Course to Elastic Stack](https://github.com/LisaHJung/Beginners-Crash-Course-to-the-Elastic-Stack-Series): 
@@ -57,45 +56,56 @@ This workshop is a part of the Beginner's Crash Course to Elastic Stack series. 
 Want to attend live workshops? Join the Elastic Americal Virtual Chapter to get the deets!
 
 ## Review from previous workshops
-There are two main ways to search in Elasticsearch:
-1) `Queries`retrieve documents that match the specified criteria. 
-2) `Aggregations` present the summary of your data as metrics, statistics, and other analytics. 
+![image](https://user-images.githubusercontent.com/60980933/118298775-23e4e280-b49d-11eb-955f-68b39102e1d4.png)
 
-![image](https://user-images.githubusercontent.com/60980933/113929277-1ad16900-97ad-11eb-8e49-2aacdf0f430b.png)
-
-![image](https://user-images.githubusercontent.com/60980933/113929349-33418380-97ad-11eb-9cc3-f7591ab69f68.png)
-
-### Get information about documents in an index
-The following query will retrieve all documents grouped into a specified index. This query is a great way to explore the structure and content of your document. 
+### Indexing a document
+The following request will index the following document.  
 
 Syntax: 
 ```
-GET Enter_name_of_the_index_here/_search
+PUT Enter-name-of-the-index/_doc/id-you-want-to-assign-to-this-document
+{
+  "field": "value"
+}
 ```
 Example: 
 ```
-GET ecommerce_data/_search
-```
-Expected response from Elasticsearch:
-
-Elasticsearch displays a number of hits(line 12) and a sample of 10 search results by default(lines 16+). The first hit(a document) is shown in lines 17-31.  The field "_ source"(line 22) lists all the fields or content of the document.
-
-![image](https://user-images.githubusercontent.com/60980933/112375185-9c52d280-8ca8-11eb-9952-16f24171dfbd.png)
-
-## Aggregations Request
-Syntax:
-```
-GET Enter_name_of_the_index_here/_search
+PUT temp_index/_doc/1
 {
-  "aggs": {
-    "Name your aggregations here": {
-      "Specify the aggregation type here": {
-        "field": "Name the field you want to aggregate on here"
-      }
-    }
+  "name": "Pineapple",
+  "quantity": 200,
+  "unit_price": 1.3,
+  "description": "a large juicy tropical fruit consisting of aromatic edible yellow flesh surrounded by a tough segmented skin and topped with a tuft of stiff leaves.",
+  "vendor_details": {
+    "vendor": "Diversificados De Costa Rica Dicori S.A.",
+    "main_contact": "Mavis Luis Fallas",
+    "phone_number": "011-506-2479-2000",
+    "country": "Costa Rica",
+    "date_received": "2020-06-02T12:15:35",
+    "preferred vendor": true
   }
 }
 ```
+Expected response from Elasticsearch:
+
+Elasticsearch will confirm that document 1 has been successfully indexed in the temp_index. 
+![image](https://user-images.githubusercontent.com/60980933/118299194-abcaec80-b49d-11eb-943e-c122956976e7.png)
+
+## View the mapping 
+Syntax:
+```
+GET Enter_name_of_the_index_here/_mapping
+```
+
+Example:
+```
+GET temp_index/_mapping
+```
+Expected response from Elasticsearch:
+![image](https://user-images.githubusercontent.com/60980933/118303597-da979180-b4a2-11eb-83ae-bb7d10514fe2.png)
+![image](https://user-images.githubusercontent.com/60980933/118303631-e7b48080-b4a2-11eb-98d7-ec3d724ea9dc.png)
+![image](https://user-images.githubusercontent.com/60980933/118303655-eedb8e80-b4a2-11eb-8998-68b32bdbe4a6.png)
+
 ### Metric Aggregations 
 `Metric`aggregations are used to compute numeric values based on your dataset. It can be used to calculate values of `sum`,`min`, `max`, `avg`, unique count(`cardinality`) and etc.  
 
