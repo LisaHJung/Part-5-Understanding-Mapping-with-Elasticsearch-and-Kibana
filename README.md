@@ -2,23 +2,6 @@
 ## Part 5: Understanding Mapping with Elasticsearch and Kibana
 Welcome to the Beginner's Crash Course to Elastic Stack!
 
-```
-PUT test_index/_doc/1
-{
-  "name": "Pineapple",
-  "quantity": 200,
-  "unit_price": 1.3,
-  "description": "a large juicy tropical fruit consisting of aromatic edible yellow flesh surrounded by a tough segmented skin and topped with a tuft of stiff leaves.",
-  "vendor_details": {
-    "vendor": "Diversificados De Costa Rica Dicori S.A.",
-    "main_contact": "Mavis Luis Fallas",
-    "phone_number": "011-506-2479-2000",
-    "country": "Costa Rica",
-    "date_received": "2020-06-02T12:15:35",
-    "preferred vendor": true
-  }
-}
-```
 This repo contains all resources shared during Part 5: Understanding Mapping with Elasticsearch and Kibana.
 
 Have you ever encountered an error “Field type is not supported for [whatever you are trying to do with Elasticsearch]”?
@@ -102,6 +85,9 @@ Example:
 GET temp_index/_mapping
 ```
 Expected response from Elasticsearch:
+
+Elasticsearch will return the mapping of the temp_index. It lists all the fields of the document we just indexed in alphabetical order and list the data type of each field. 
+
 ![image](https://user-images.githubusercontent.com/60980933/118303597-da979180-b4a2-11eb-83ae-bb7d10514fe2.png)
 ![image](https://user-images.githubusercontent.com/60980933/118303631-e7b48080-b4a2-11eb-98d7-ec3d724ea9dc.png)
 ![image](https://user-images.githubusercontent.com/60980933/118303655-eedb8e80-b4a2-11eb-8998-68b32bdbe4a6.png)
