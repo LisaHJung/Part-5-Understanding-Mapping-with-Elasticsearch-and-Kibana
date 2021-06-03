@@ -12,13 +12,7 @@ Mapping is the process of defining how a document and its fields are indexed and
 
 Understanding how mapping works will help you define mapping that best serves your use case and help you fix these pesky errors as they come up.
 
-By the end of this workshop, you will be able to:
-- what a mapping is
-- identify areas to optimize mapping
-- Define own mapping
-
-define your own mappings to optimize the performance of your cluster
-Defining your own mappings will make indexing and searching more efficient.
+By the end of this workshop, you will be able to define what a mapping is and efine your own mapping to make indexing and searching fore efficient. 
 
 ## Resources
 
@@ -39,9 +33,9 @@ This workshop is a part of the Beginner's Crash Course to Elastic Stack series. 
 Want to attend live workshops? Join the Elastic Americal Virtual Chapter to get the deets!
 
 ## Review from previous workshops
-![image](https://user-images.githubusercontent.com/60980933/120386363-c4346700-c2e5-11eb-8f57-e99bf2153594.png)
+![image](https://user-images.githubusercontent.com/60980933/120677555-6e320180-c454-11eb-890b-b2a7c1d61618.png)
 
-![image](https://user-images.githubusercontent.com/60980933/118298775-23e4e280-b49d-11eb-955f-68b39102e1d4.png)
+![image](https://user-images.githubusercontent.com/60980933/120678079-f912fc00-c454-11eb-80ef-147329337628.png)
 
 ### Indexing a document
 The following request will index the following document.  
@@ -77,7 +71,14 @@ Elasticsearch will confirm that this document has been successfully indexed in t
 ![image](https://user-images.githubusercontent.com/60980933/120387213-d5ca3e80-c2e6-11eb-8ca8-731222174724.png)
 
 ## Mapping
-Mapping defines how a document and its fields are indexed and stored. Because of that, mapping affects how Elasticsearch stores and searches data. 
+Mapping defines how a document and its fields are indexed and stored. 
+
+![image](https://user-images.githubusercontent.com/60980933/120681399-915eb000-c458-11eb-9a32-2d121c93b3e8.png)
+
+It contains a list of names and data types of the fields of an index. It also includes information about how the fields should be indexed and stored by Lucene! 
+
+![image](https://user-images.githubusercontent.com/60980933/120687910-b99ddd00-c45f-11eb-81e8-7f758ae94e43.png)
+
 
 ### View the mapping 
 Syntax:
