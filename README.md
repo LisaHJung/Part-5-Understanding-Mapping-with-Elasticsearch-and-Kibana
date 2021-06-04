@@ -77,8 +77,7 @@ Mapping defines how a document and its fields are indexed and stored.
 
 It contains a list of names and data types of the fields of an index. It also includes information about how the fields should be indexed and stored by Lucene! 
 
-![image](https://user-images.githubusercontent.com/60980933/120687910-b99ddd00-c45f-11eb-81e8-7f758ae94e43.png)
-
+![image](https://user-images.githubusercontent.com/60980933/120688263-1e593780-c460-11eb-9963-87ac8689e2fc.png)
 
 ### View the mapping 
 Syntax:
@@ -105,28 +104,36 @@ There are two kinds of string data types:
 1. Text
 2. Keyword
 
-By default, every string gets mapped twice as a text field and as a a keyword multi-field. Each data type is primed for different types of searches. 
+By default, every string gets mapped twice as a text field and as a keyword multi-field. Each data type is primed for different types of searches. 
 
 `Text` is designed for full-text searches. 
-`Keyword` is designed for exact searches, aggregations, and sorting
+
+`Keyword` is designed for exact searches, aggregations, and sorting.
 
 You can customize your mapping by choosing either text or keyword only or both! 
 
-#### Text Analysis
-Ever notice that when you search in Elasticsearch, it is not case sensitive or punctuation does not seem to matter? This is because text analysis occurs when your fields are indexed. 
+#### Text Data type
+**Text Analysis**
+Ever notice that when you search in Elasticsearch, it is not case sensitive or punctuation does not seem to matter? This is because `text analysis` occurs when your fields are indexed. 
 
-By default, strings are analyzed when it is indexed. Strings are broken up into individual words also known as tokens. The tokens then are further lowercased. If the strings contains punctuation, the punctuation is also removed as well! 
+By default, strings are analyzed when it is indexed. The string is broken up into individual words also known as tokens. The analyzer further lowercases each token and removes punctuations. 
 
-![image](https://user-images.githubusercontent.com/60980933/120361944-bc65ca00-c2c7-11eb-8aa1-5fbfe866e877.png)
+![image](https://user-images.githubusercontent.com/60980933/120847933-672cf100-c531-11eb-9b9c-522c354b0e10.png)
 
-Take the field country with the value New Zealand for example. When this field is indexed, New Zealand is analyzed and broken up into individual tokens(new and zealand) and each token is lowercased. 
+**Inverted index**
+![image](https://user-images.githubusercontent.com/60980933/120848012-7ad85780-c531-11eb-86c4-e972cfb3abb2.png)
+Once the string is analyzed, the individual tokens are stored in a sorted list known as the `inverted index`. Each unique token is stored in the index with its relevant ID. 
 
+The same process occurs every time you index a new document. 
 
-#### Difference between Text and Keyword
+![image](https://user-images.githubusercontent.com/60980933/120848060-8c216400-c531-11eb-9fed-6cfd5b50d7c8.png)
+![image](https://user-images.githubusercontent.com/60980933/120851449-14096d00-c536-11eb-88d6-08add98441db.png)
 
+![image](https://user-images.githubusercontent.com/60980933/120851817-985bf000-c536-11eb-8e5e-3c54b4304258.png)
 
-### Customizing your own mappings
+### Keyword data type
 
+### Defining your own mapping
 Step 1: Index a sample of documents into a temporary index. 
 This document should closely resemble the fields and values of the dataset you want to index. 
 
