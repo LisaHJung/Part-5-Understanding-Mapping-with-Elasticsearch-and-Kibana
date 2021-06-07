@@ -10,9 +10,9 @@ The most likely culprit of this error is the mapping of your index!
 
 Mapping is the process of defining how a document and its fields are indexed and stored. It defines the data type and format of the fields in the documents. As a result, mapping can significantly affect how Elasticsearch searches and stores data.
 
-Understanding how mapping works will help you define mapping that best serves your use case and help you fix these pesky errors as they come up.
+Understanding how mapping works will help you define mapping that best serves your use case.
 
-By the end of this workshop, you will be able to define what a mapping is and efine your own mapping to make indexing and searching fore efficient. 
+By the end of this workshop, you will be able to define what a mapping is and define your own mapping to make indexing and searching more efficient. 
 
 ## Resources
 
@@ -131,7 +131,12 @@ The same process occurs every time you index a new document.
 
 ![image](https://user-images.githubusercontent.com/60980933/120851817-985bf000-c536-11eb-8e5e-3c54b4304258.png)
 
-### Keyword data type
+#### Keyword data type
+Keyword data type is used for aggregations, sorting, and exact searches. These types ofo searches require original strings therefore the field typed Keyword is not analyzed. 
+
+![image](https://user-images.githubusercontent.com/60980933/120907913-d7676f80-c622-11eb-8351-8c79894b9eae.png)
+
+Keyword data type is used for aggregations, sorting, and exact searches. These types of searches require original strings therefore the field typed Keyword is not analyzed. 
 
 ### Defining your own mapping
 Step 1: Index a sample of documents into a temporary index. 
