@@ -112,14 +112,14 @@ There are two kinds of string data types:
 
 By default, every string gets mapped twice as a text field and as a keyword multi-field. Each data type is primed for different types of searches. 
 
-`Text` is designed for full-text searches. 
+`Text` data type is designed for full-text searches. 
 
-`Keyword` is designed for exact searches, aggregations, and sorting.
+`Keyword`data type is designed for exact searches, aggregations, and sorting.
 
 You can customize your mapping by choosing either text or keyword only or both! 
 
 #### Text Data type
-**Text Analysis**
+##### Text Analysis
 Ever notice that when you search in Elasticsearch, it is not case sensitive or punctuation does not seem to matter? This is because `text analysis` occurs when your fields are indexed. 
 
 By default, strings are analyzed when it is indexed. The string is broken up into individual words also known as tokens. The analyzer further lowercases each token and removes punctuations. 
