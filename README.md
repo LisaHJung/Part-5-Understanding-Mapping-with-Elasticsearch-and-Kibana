@@ -35,7 +35,7 @@ Want to attend live workshops? Join the Elastic Americal Virtual Chapter to get 
 ## Review from previous workshops
 ![image](https://user-images.githubusercontent.com/60980933/120677555-6e320180-c454-11eb-890b-b2a7c1d61618.png)
 
-![image](https://user-images.githubusercontent.com/60980933/120678079-f912fc00-c454-11eb-80ef-147329337628.png)
+![image](https://user-images.githubusercontent.com/60980933/121091155-ccd5e300-c7a6-11eb-8afb-766c6723fa0d.png)
 
 ### Indexing a document
 The following request will index the following document.  
@@ -52,16 +52,16 @@ Example:
 POST temp_index/_doc
 {
   "name": "Pineapple",
+  "country_of_origin": "New Zealand",
   "quantity": 200,
   "unit_price": 3.11,
   "description": "a large juicy tropical fruit consisting of aromatic edible yellow flesh surrounded by a tough segmented skin and topped with a tuft of stiff leaves.These pineapples are sourced from New Zealand.",
   "vendor_details": {
     "vendor": "Tropical Fruit Growers of New Zealand",
     "main_contact": "Hugh Rose",
-    "phone_number": "011-506-2479-2000",
-    "country": "New Zealand",
+    "vendor_location": "Whangarei, New Zealand",
     "date_received": "2020-06-02T12:15:35",
-    "preferred vendor": true
+    "preferred_vendor": true
   }
 }
 ```
@@ -71,20 +71,26 @@ Elasticsearch will confirm that this document has been successfully indexed in t
 ![image](https://user-images.githubusercontent.com/60980933/120387213-d5ca3e80-c2e6-11eb-8ca8-731222174724.png)
 
 ## Mapping
-Mapping defines how a document and its fields are indexed and stored. 
+Mapping defines how a document and its fields are indexed and stored by defining data types of each field.  
 
-![image](https://user-images.githubusercontent.com/60980933/120681399-915eb000-c458-11eb-9a32-2d121c93b3e8.png)
+![image](https://user-images.githubusercontent.com/60980933/121094344-bda56400-c7ab-11eb-968a-4cb247757c1e.png)
 
-It contains a list of names and data types of the fields of an index. It also includes information about how the fields should be indexed and stored by Lucene! 
+It contains a list of names and data types of the fields of an index. Depending on these data types, the fields are indexed and stored differently in Elasticsearch.  
+
+### Dynamic Mapping
+When a user does not define mapping in advance, Elasticsearch creates or updatees the mapping as needed by default. This is known as `dynamic mapping`. 
 
 ![image](https://user-images.githubusercontent.com/60980933/120688263-1e593780-c460-11eb-9963-87ac8689e2fc.png)
+
+With `dynamic mapping`, Elasticsearch looks at each field and tries to infer the data type from the field content. Then, it assigns a data type to each field. 
+
+Depending on the assigned data type, each field is indexed and primed for different types of search. This is why mapping plays an important role in how Elasticsearch stores and searches for data. 
 
 ### View the mapping 
 Syntax:
 ```
 GET Enter_name_of_the_index_here/_mapping
 ```
-
 Example:
 ```
 GET temp_index/_mapping
@@ -93,11 +99,11 @@ Expected response from Elasticsearch:
 
 Elasticsearch will return the mapping of the temp_index. It lists all the fields of the document in an alphabetical order and lists the data type of each field(text, keyword, long, float, date, boolean and etc). 
 
-![image](https://user-images.githubusercontent.com/60980933/118303597-da979180-b4a2-11eb-83ae-bb7d10514fe2.png)
-![image](https://user-images.githubusercontent.com/60980933/118303631-e7b48080-b4a2-11eb-98d7-ec3d724ea9dc.png)
-![image](https://user-images.githubusercontent.com/60980933/118303655-eedb8e80-b4a2-11eb-8998-68b32bdbe4a6.png)
+![image](https://user-images.githubusercontent.com/60980933/121097045-98ffbb00-c7b0-11eb-824d-20d01f7ade75.png)
+![image](https://user-images.githubusercontent.com/60980933/121097085-a9b03100-c7b0-11eb-9ffb-f5106bbcd0fb.png)
+![image](https://user-images.githubusercontent.com/60980933/121097110-b3399900-c7b0-11eb-8e8e-4ffe9a1b3551.png)
 
-For list of all data types, click [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html)!
+For the list of all data types, click [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html)!
 
 ### Indexing Strings 
 There are two kinds of string data types:
