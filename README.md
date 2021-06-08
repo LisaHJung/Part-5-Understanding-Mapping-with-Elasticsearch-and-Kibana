@@ -127,7 +127,7 @@ By default, strings are analyzed when it is indexed. The string is broken up int
 ![image](https://user-images.githubusercontent.com/60980933/120847933-672cf100-c531-11eb-9b9c-522c354b0e10.png)
 
 **Inverted index**
-![image](https://user-images.githubusercontent.com/60980933/120848012-7ad85780-c531-11eb-86c4-e972cfb3abb2.png)
+![image](https://user-images.githubusercontent.com/60980933/121099236-b33b9800-c7b4-11eb-837b-a914ed8e3725.png)
 Once the string is analyzed, the individual tokens are stored in a sorted list known as the `inverted index`. Each unique token is stored in the index with its relevant ID. 
 
 The same process occurs every time you index a new document. 
@@ -137,12 +137,15 @@ The same process occurs every time you index a new document.
 
 ![image](https://user-images.githubusercontent.com/60980933/120851817-985bf000-c536-11eb-8e5e-3c54b4304258.png)
 
+![image](https://user-images.githubusercontent.com/60980933/121113584-89439f00-c7cf-11eb-80a8-22b39f230ef9.png)
+
 #### Keyword data type
-Keyword data type is used for aggregations, sorting, and exact searches. These types ofo searches require original strings therefore the field typed Keyword is not analyzed. 
+`Keyword` data type is used for aggregations, sorting, and exact searches. These actions look up the document ID to find the values it has in its fields. 
 
-![image](https://user-images.githubusercontent.com/60980933/120907913-d7676f80-c622-11eb-8351-8c79894b9eae.png)
+`Keyword` field is suited to perform these actions because it uses a data structure called `doc values` to store data. 
 
-Keyword data type is used for aggregations, sorting, and exact searches. These types of searches require original strings therefore the field typed Keyword is not analyzed. 
+For each document, the document id along with the field value(original string) are added to a table. This data structure(`Doc values`) is designed for actions that require looking up the document ID to find the values it has in its fields. 
+![image](https://user-images.githubusercontent.com/60980933/121113465-526d8900-c7cf-11eb-8e31-cdbf952a1d34.png)
 
 ### Defining your own mapping
 Step 1: Index a sample of documents into a temporary index. 
@@ -181,3 +184,4 @@ PUT Name-of-your-final-index
   copy and paste your editied mapping here
 }
 ```
+#### cannot change the mapping
