@@ -150,9 +150,12 @@ For each document, the document id along with the field value(original string) a
 **Project**: Build an app for a client who manages a produce warehouse. 
 
 **This app must enable users to:** 
-1.Search for produce name and description 
+1. Search for produce name and description
+
 2. Pull up a list of produce received within a date range 
+
 3. Identify top countries of origin where the client buys most produce from
+
 4. Compare unit prices of produce item across countries
 
 **Sample Data**
