@@ -273,6 +273,112 @@ Example:
 ```
 GET produce_index/_mapping
 ```
-#### Dynamic indexing
-
 #### What if you do need to make changes to the field type? 
+You must reindex the whole thing. 
+STEP 1: Create a new index(produce_v2) with the following mapping.
+Example:
+```
+PUT produce_v2
+{
+    "mappings" : {
+      "properties" : {
+        "country_of_origin" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "date_received" : {
+          "type" : "date"
+        },
+        "description" : {
+          "type" : "text"
+        },
+        "name" : {
+          "type" : "text"
+        },
+        "organic" : {
+          "type" : "boolean"
+        },
+        "quantity" : {
+          "type" : "long"
+        },
+        "unit_price" : {
+          "type" : "float"
+        },
+        "vendor_details" : {
+          "type" : "object",
+          "enabled" : false
+        }
+      }
+    }
+  }
+}
+```
+STEP 2: Reindex the data from original index(produce) to the one you just created(produce_v2).
+```
+POST _reindex
+{
+  "source": {
+    "index": "produce"
+  },
+  "dest": {
+    "index": "produce_v2"
+  }
+}
+```
+##### Dynamic template
+```
+```PUT Enter-name-of-index-here
+{
+  "mappings": {
+    "dynamic_templates": [
+      {
+        "Name-your-template-here": {
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+```
+PUT test_v2
+{
+  "mappings": {
+    "dynamic_templates": [
+      {
+        "string_fields": {
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+Expected response from Elasticsearch:
+![image](https://user-images.githubusercontent.com/60980933/121422110-1bf95080-c92c-11eb-866e-6e3d50fb06cb.png)
+
+check to see if it worked
+```
+PUT test_v2/_doc/1
+{
+  "category": "news",
+  "city": "Denver"
+}
+```
+```
+GET test_v2/_mapping
+```
+
+Expected response from Elasticsearch:
+The mapping shows the dynamic teamplates we have specified earlier when we defined the mapping. Under properties key, you will see that both fields category and city have been typed as keyword only. 
