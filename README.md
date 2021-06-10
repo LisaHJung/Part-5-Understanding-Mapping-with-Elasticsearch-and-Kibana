@@ -98,7 +98,7 @@ GET temp_index/_mapping
 ```
 Expected response from Elasticsearch:
 
-Elasticsearch will return the mapping of the temp_index. It lists all the fields of the document in an alphabetical order and lists the data type of each field(text, keyword, long, float, date, boolean and etc). 
+Elasticsearch will return the mapping of the temp_index. It lists all the fields of the document in an alphabetical order and lists the type of each field(text, keyword, long, float, date, boolean and etc). 
 
 ![image](https://user-images.githubusercontent.com/60980933/121591969-5c71d080-c9f7-11eb-95dc-70f04276929a.png)
 ![image](https://user-images.githubusercontent.com/60980933/121592051-76131800-c9f7-11eb-8820-d3d2b39e1e4f.png)
