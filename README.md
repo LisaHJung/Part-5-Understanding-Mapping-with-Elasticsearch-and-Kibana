@@ -184,9 +184,8 @@ Add slides here.
 Rules
 1. If you do not define a mapping ahead of time, Elastcisearch dynamically creates the mapping if it doesn't exist. 
 2. If you do decide to define your own mapping, you can do so at index creation.
-3. ONLY ONE mapping is defined per index. Once the index has been created, we CANNOT change the mapping of an existing field. 
-4. If you must change it, you will have to create a new index with the desired mapping, then reindex the existing index to the new index. 
-
+3. ONE mapping is defined per index. Once the index has been created, we can only add *new* fields to a mapping. We CANNOT change the mapping of an *existing* field. 
+4. If you must change the type of an existing field, you must create a new index with the desired mapping, then reindex all documents into the new index. 
 
 Step 1: Index a sample document into a test index. 
 The sample document must contain the fields that you want to define. These fields must also contain values that map closely to the field types that you want. 
