@@ -81,9 +81,9 @@ It contains a list of the names and types of fields in an index. Depending on it
 ### Dynamic Mapping
 When a user does not define mapping in advance, Elasticsearch creates or updates the mapping as needed by default. This is known as `dynamic mapping`. 
 
-![image](https://user-images.githubusercontent.com/60980933/121588751-875a2580-c9f3-11eb-8971-85c6168989fe.png)
+![image](https://user-images.githubusercontent.com/60980933/121590398-83c79e00-c9f5-11eb-95f8-e32654447359.png)
 
-With `dynamic mapping`, Elasticsearch looks at each field and tries to infer the data type from the field content. Then, it assigns a type to each field. 
+With `dynamic mapping`, Elasticsearch looks at each field and tries to infer the data type from the field content. Then, it assigns a type to each field and creates a list of field names and types known as mapping.  
 
 Depending on the assigned field type, each field is indexed and primed for different types of search. This is why mapping plays an important role in how Elasticsearch stores and searches for data. 
 
@@ -100,9 +100,9 @@ Expected response from Elasticsearch:
 
 Elasticsearch will return the mapping of the temp_index. It lists all the fields of the document in an alphabetical order and lists the data type of each field(text, keyword, long, float, date, boolean and etc). 
 
-![image](https://user-images.githubusercontent.com/60980933/121097045-98ffbb00-c7b0-11eb-824d-20d01f7ade75.png)
-![image](https://user-images.githubusercontent.com/60980933/121097085-a9b03100-c7b0-11eb-9ffb-f5106bbcd0fb.png)
-![image](https://user-images.githubusercontent.com/60980933/121097110-b3399900-c7b0-11eb-8e8e-4ffe9a1b3551.png)
+![image](https://user-images.githubusercontent.com/60980933/121591969-5c71d080-c9f7-11eb-95dc-70f04276929a.png)
+![image](https://user-images.githubusercontent.com/60980933/121592051-76131800-c9f7-11eb-8820-d3d2b39e1e4f.png)
+![image](https://user-images.githubusercontent.com/60980933/121592106-83c89d80-c9f7-11eb-97fc-56d23b0242ae.png)
 
 For the list of all field types, click [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html)!
 
