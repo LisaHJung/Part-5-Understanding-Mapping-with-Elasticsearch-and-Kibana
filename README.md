@@ -152,17 +152,20 @@ For each document, the document id along with the field value(original string) a
 **This app must enable users to:** 
 1. Search for produce name and description
 
-2. Pull up a list of produce received within a date range 
+2. Identify top countries of origin where the client buys most produce from
 
-3. Identify top countries of origin where the client buys most produce from
+3. Sort produce by produce type(Fruit or Vegetable)
 
-4. Compare unit prices of produce item across countries
+4. Get the summary of monthly total purchase
 
 **Sample Data**
-```{
+```
+{
   "name": "Pineapple",
+  "botanical_name": "Ananas comosus",
+  "produce_type": "Fruit",
   "country_of_origin": "New Zealand",
-  "date_received": "2020-06-02T12:15:35",
+  "date_purchased": "2020-06-02T12:15:35",
   "quantity": 200,
   "unit_price": 3.11,
   "description": "a large juicy tropical fruit consisting of aromatic edible yellow flesh surrounded by a tough segmented skin and topped with a tuft of stiff leaves.These pineapples are sourced from New Zealand.",
@@ -175,13 +178,15 @@ For each document, the document id along with the field value(original string) a
 }
 ```
 ** Field Analysis **
+Add slides here. 
 
 ### Defining your own mapping
 Rules
 1. If you do not define a mapping ahead of time, Elastcisearch dynamically creates the mapping if it doesn't exist. 
 2. If you do decide to define your own mapping, you can do so at index creation.
-3. ONLY ONE mapping is defined per index. Once the index has been created, we CANNOT change the mapping of a field. 
-4. If you must change it, you will have to reindex the existing index to another index and define mapping for the new index. 
+3. ONLY ONE mapping is defined per index. Once the index has been created, we CANNOT change the mapping of an existing field. 
+4. If you must change it, you will have to create a new index with the desired mapping, then reindex the existing index to the new index. 
+
 
 Step 1: Index a sample document into a test index. 
 The sample document must contain the fields that you want to define. These fields must also contain values that map closely to the field types that you want. 
@@ -199,8 +204,10 @@ Example:
 POST test_index/_doc
 {
   "name": "Pineapple",
+  "botanical_name": "Ananas comosus",
+  "produce_type": "Fruit",
   "country_of_origin": "New Zealand",
-  "date_received": "2020-06-02T12:15:35",
+  "date_purchased": "2020-06-02T12:15:35",
   "quantity": 200,
   "unit_price": 3.11,
   "description": "a large juicy tropical fruit consisting of aromatic edible yellow flesh surrounded by a tough segmented skin and topped with a tuft of stiff leaves.These pineapples are sourced from New Zealand.",
@@ -240,10 +247,19 @@ PUT produce_index
 {
   "mappings": {
     "properties": {
-      "country_of_origin": {
-        "type": "keyword"
+      "botanical_name": {
+        "enabled": false
       },
-      "date_received": {
+      "country_of_origin": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "date_purchased": {
         "type": "date"
       },
       "description": {
@@ -251,6 +267,9 @@ PUT produce_index
       },
       "name": {
         "type": "text"
+      },
+      "produce_type": {
+        "type": "keyword"
       },
       "quantity": {
         "type": "long"
@@ -265,7 +284,7 @@ PUT produce_index
   }
 }
 ```
-Step 5: Check the mapping of the new index to make sure the mapping has been defined correctly
+Step 5: Check the mapping of the new index to make sure the all the fields have been mapped correctly
 
 Syntax:
 ```
@@ -276,6 +295,15 @@ Example:
 ```
 GET produce_index/_mapping
 ```
+#### Adding a new field to the mapping of an existing index
+```
+PUT produce_index/_doc/2
+{
+  "organic": true
+}
+```
+Expected response from Elasticsearch:
+
 #### What if you do need to make changes to the field type? 
 You must reindex the whole thing. 
 STEP 1: Create a new index(produce_v2) with the following mapping.
@@ -335,7 +363,7 @@ POST _reindex
 ```
 ##### Dynamic template
 ```
-```PUT Enter-name-of-index-here
+PUT Enter-name-of-index-here
 {
   "mappings": {
     "dynamic_templates": [
