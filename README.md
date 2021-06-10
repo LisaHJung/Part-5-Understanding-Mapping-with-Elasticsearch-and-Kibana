@@ -32,10 +32,11 @@ This workshop is a part of the Beginner's Crash Course to Elastic Stack series. 
 
 Want to attend live workshops? Join the Elastic Americal Virtual Chapter to get the deets!
 
-## Review from previous workshops
-![image](https://user-images.githubusercontent.com/60980933/120677555-6e320180-c454-11eb-890b-b2a7c1d61618.png)
+## What is a mapping?
+![image](https://user-images.githubusercontent.com/60980933/121580875-7953d700-c9ea-11eb-8a4c-015ea238540e.png)
 
-![image](https://user-images.githubusercontent.com/60980933/121091155-ccd5e300-c7a6-11eb-8afb-766c6723fa0d.png)
+## Review from previous workshops
+![image](https://user-images.githubusercontent.com/60980933/121580744-55909100-c9ea-11eb-98fe-8c8491b0a7a1.png)
 
 ### Indexing a document
 The following request will index the following document.  
@@ -71,16 +72,16 @@ Elasticsearch will confirm that this document has been successfully indexed in t
 ![image](https://user-images.githubusercontent.com/60980933/120387213-d5ca3e80-c2e6-11eb-8ca8-731222174724.png)
 
 ## Mapping
-Mapping defines how a document and its fields are indexed and stored by defining the type of each field.  
+Mapping determines how a document and its fields are indexed and stored by defining the type of each field.  
 
 ![image](https://user-images.githubusercontent.com/60980933/121219417-e7f53100-c840-11eb-9848-7acb3df84227.png)
 
-It contains a list of names and field types of an index. Depending on its type, the fields are indexed and stored differently in Elasticsearch.  
+It contains a list of the names and types of fields in an index. Depending on its type, each field is indexed and stored differently in Elasticsearch.  
 
 ### Dynamic Mapping
 When a user does not define mapping in advance, Elasticsearch creates or updates the mapping as needed by default. This is known as `dynamic mapping`. 
 
-![image](https://user-images.githubusercontent.com/60980933/121225461-c5661680-c846-11eb-9e3c-e780e4689a1f.png)
+![Uploading image.png…]()
 
 With `dynamic mapping`, Elasticsearch looks at each field and tries to infer the data type from the field content. Then, it assigns a type to each field. 
 
@@ -253,8 +254,7 @@ PUT produce_index
         "type": "text",
         "fields": {
           "keyword": {
-            "type": "keyword",
-            "ignore_above": 256
+            "type": "keyword"
           }
         }
       },
@@ -300,6 +300,50 @@ PUT produce_index/_doc/2
 {
   "organic": true
 }
+```
+#### runtime field
+```
+
+PUT produce_index/_mapping
+{
+  "runtime": {
+    "total_expense": {
+      "type": "double",
+      "script": {
+        "source": "emit(doc['unit_price'].value* doc['quantity'].value)"
+      }
+    }
+  }
+}
+
+GET produce_index/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "exists": {
+            "field": "unit_price"
+          }
+        },
+        {
+          "exists": {
+            "field": "quantity"
+          }
+        }
+      ]
+    }
+  },
+  "aggregations": {
+    "total": {
+      "sum": {
+        "field": "total_expense"
+      }
+    }
+  }
+}
+
+
 ```
 Expected response from Elasticsearch:
 
