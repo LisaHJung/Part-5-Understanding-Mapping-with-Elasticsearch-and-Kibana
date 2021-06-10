@@ -81,7 +81,7 @@ It contains a list of the names and types of fields in an index. Depending on it
 ### Dynamic Mapping
 When a user does not define mapping in advance, Elasticsearch creates or updates the mapping as needed by default. This is known as `dynamic mapping`. 
 
-![Uploading image.png…]()
+![image](https://user-images.githubusercontent.com/60980933/121588751-875a2580-c9f3-11eb-8971-85c6168989fe.png)
 
 With `dynamic mapping`, Elasticsearch looks at each field and tries to infer the data type from the field content. Then, it assigns a type to each field. 
 
