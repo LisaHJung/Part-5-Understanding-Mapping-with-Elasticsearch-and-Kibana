@@ -516,9 +516,8 @@ This request moves data from the produce_index to the produce_v2 index. Now we c
 ![image](https://user-images.githubusercontent.com/60980933/121726550-ee391680-caa7-11eb-89a9-be1d4416e0e3.png)
 
 #### Runtime field
-![image](https://user-images.githubusercontent.com/60980933/121726752-348e7580-caa8-11eb-82ff-c248364438f6.png)
-
 ![image](https://user-images.githubusercontent.com/60980933/121622651-9b217e00-ca2b-11eb-8fa2-fed0d1129841.png)
+![image](https://user-images.githubusercontent.com/60980933/121733294-8935ee80-cab0-11eb-8314-4c335a93911d.png)
 
 We have one last feature to work on! 
 
