@@ -32,13 +32,13 @@ This workshop is a part of the Beginner's Crash Course to Elastic Stack series. 
 
 Want to attend live workshops? Join the Elastic Americal Virtual Chapter to get the deets!
 
-## What is a mapping?
+## What is a Mapping?
 ![image](https://user-images.githubusercontent.com/60980933/121580875-7953d700-c9ea-11eb-8a4c-015ea238540e.png)
 
-## Review from previous workshops
+## Review from Previous Workshops
 ![image](https://user-images.githubusercontent.com/60980933/121580744-55909100-c9ea-11eb-98fe-8c8491b0a7a1.png)
 
-### Indexing a document
+### Indexing a Document
 The following request will index the following document.  
 
 Syntax: 
@@ -87,7 +87,7 @@ With `dynamic mapping`, Elasticsearch looks at each field and tries to infer the
 
 Depending on the assigned field type, each field is indexed and primed for different types of search. This is why mapping plays an important role in how Elasticsearch stores and searches for data. 
 
-### View the mapping 
+### View the Mapping 
 Syntax:
 ```
 GET Enter_name_of_the_index_here/_mapping
@@ -117,9 +117,9 @@ By default, every string gets mapped twice as a text field and as a keyword mult
 
 `Keyword`field type is designed for exact searches, aggregations, and sorting.
 
-You can customize your mapping by choosing either text or keyword only or both! 
+You can customize your mapping by assigning the filed type as either text or keyword or both! 
 
-#### Text field type
+#### Text Field Type
 ##### Text Analysis
 Ever notice that when you search in Elasticsearch, it is not case sensitive or punctuation does not seem to matter? This is because `text analysis` occurs when your fields are indexed. 
 
@@ -127,7 +127,7 @@ By default, strings are analyzed when it is indexed. The string is broken up int
 
 ![image](https://user-images.githubusercontent.com/60980933/120847933-672cf100-c531-11eb-9b9c-522c354b0e10.png)
 
-**Inverted index**
+**Inverted Index**
 ![image](https://user-images.githubusercontent.com/60980933/121099236-b33b9800-c7b4-11eb-837b-a914ed8e3725.png)
 Once the string is analyzed, the individual tokens are stored in a sorted list known as the `inverted index`. Each unique token is stored in the index with its relevant ID. 
 
@@ -135,31 +135,32 @@ The same process occurs every time you index a new document.
 
 ![image](https://user-images.githubusercontent.com/60980933/120848060-8c216400-c531-11eb-9fed-6cfd5b50d7c8.png)
 ![image](https://user-images.githubusercontent.com/60980933/120851449-14096d00-c536-11eb-88d6-08add98441db.png)
-![image](https://user-images.githubusercontent.com/60980933/121221919-4a4f3100-c843-11eb-9901-db131f9508c4.png)
+![image](https://user-images.githubusercontent.com/60980933/121601915-cdb78080-ca03-11eb-81ad-9265cffc8581.png)
 ![image](https://user-images.githubusercontent.com/60980933/121113584-89439f00-c7cf-11eb-80a8-22b39f230ef9.png)
 
-#### Keyword data type
-`Keyword` data type is used for aggregations, sorting, and exact searches. These actions look up the document ID to find the values it has in its fields. 
+#### Keyword Field Type
+`Keyword` field type is used for aggregations, sorting, and exact searches. These actions look up the document ID to find the values it has in its fields. 
 
 `Keyword` field is suited to perform these actions because it uses a data structure called `doc values` to store data. 
 
-For each document, the document id along with the field value(original string) are added to a table. This data structure(`Doc values`) is designed for actions that require looking up the document ID to find the values it has in its fields. 
-![image](https://user-images.githubusercontent.com/60980933/121113465-526d8900-c7cf-11eb-8e31-cdbf952a1d34.png)
+For each document, the document id along with the field value(original string) are added to a table. This data structure(`doc values`) is designed for actions that require looking up the document ID to find the values it has in its fields.
 
-### Mapping Exercise
+![image](https://user-images.githubusercontent.com/60980933/121603436-fccef180-ca05-11eb-817e-cb77b46ae969.png)
 
-**Project**: Build an app for a client who manages a produce warehouse. 
+### Mapping exercise
+
+**Project**: Build an app for a client who manages a produce warehouse 
 
 **This app must enable users to:** 
-1. Search for produce name and description
+1. Search for produce name, country of origin and description
 
 2. Identify top countries of origin where the client buys most produce from
 
 3. Sort produce by produce type(Fruit or Vegetable)
 
-4. Get the summary of monthly total purchase
+4. Get the summary of monthly expense
 
-**Sample Data**
+**Sample data**
 ```
 {
   "name": "Pineapple",
@@ -178,8 +179,12 @@ For each document, the document id along with the field value(original string) a
   }
 }
 ```
-** Field Analysis **
-Add slides here. 
+** Plan of Action **
+![image](https://user-images.githubusercontent.com/60980933/121604139-3eac6780-ca07-11eb-90eb-2214e2c5cbd4.png)
+![image](https://user-images.githubusercontent.com/60980933/121604166-4704a280-ca07-11eb-9fc6-eb494ec92699.png)
+![image](https://user-images.githubusercontent.com/60980933/121604184-4c61ed00-ca07-11eb-84f8-208c3e927a08.png)
+![image](https://user-images.githubusercontent.com/60980933/121604209-571c8200-ca07-11eb-9a9a-cdf83f76d649.png)
+![image](https://user-images.githubusercontent.com/60980933/121606802-12dfb080-ca0c-11eb-897e-f3f39a93c044.png)
 
 ### Defining your own mapping
 Rules
