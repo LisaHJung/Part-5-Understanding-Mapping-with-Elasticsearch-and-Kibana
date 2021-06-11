@@ -180,14 +180,14 @@ For each document, the document id along with the field value(original string) a
 }
 ```
 **Plan of Action**
-![image](https://user-images.githubusercontent.com/60980933/121604139-3eac6780-ca07-11eb-90eb-2214e2c5cbd4.png)
+![image](https://user-images.githubusercontent.com/60980933/121710560-f89ee480-ca96-11eb-98c5-ba9a535e4360.png)
 ![image](https://user-images.githubusercontent.com/60980933/121604166-4704a280-ca07-11eb-9fc6-eb494ec92699.png)
 ![image](https://user-images.githubusercontent.com/60980933/121604184-4c61ed00-ca07-11eb-84f8-208c3e927a08.png)
-![image](https://user-images.githubusercontent.com/60980933/121604209-571c8200-ca07-11eb-9a9a-cdf83f76d649.png)
-![image](https://user-images.githubusercontent.com/60980933/121606802-12dfb080-ca0c-11eb-897e-f3f39a93c044.png)
+![image](https://user-images.githubusercontent.com/60980933/121713123-ba56f480-ca99-11eb-9da9-72ce8f3995ac.png)
+![image](https://user-images.githubusercontent.com/60980933/121713301-effbdd80-ca99-11eb-9c1c-bce14b41a9ac.png)
 
 ### Defining your own mapping
-Rules
+**Rules**
 1. If you do not define a mapping ahead of time, Elastcisearch dynamically creates the mapping if it doesn't exist. 
 2. If you do decide to define your own mapping, you can do so at index creation.
 3. ONE mapping is defined per index. Once the index has been created, we can only add *new* fields to a mapping. We CANNOT change the mapping of an *existing* field. 
@@ -245,7 +245,8 @@ Expected response from Elasticsearch:
 Elasticsearch will display the mapping it has created. It lists the fields in alphabetical order. This document is identical to the one we indexed into temp_index. To save space, the screenshots of the mapping has not been included here. 
 
 **Step 3: Edit the mapping**
-Copy and paste the mapping from step 2 into the Kibana console. Edit the mapping to fit your use case. 
+
+Copy and paste the mapping from step 2 into the Kibana console. From the pasted results, remove the test index along with its opening and closing brackets. Edit the mapping to fit your use case. 
 
 ![image](https://user-images.githubusercontent.com/60980933/121617475-3b72a500-ca22-11eb-885b-4fab72db17b5.png)
 
@@ -290,6 +291,8 @@ Your edited mapping should look like the following:
   }
 }
 ```
+![image](https://user-images.githubusercontent.com/60980933/121721478-87b0fa00-caa1-11eb-81c2-aac579020b38.png)
+
 **Step 4: Create a new index using your customized mappings from step 3.** 
 
 Syntax:
@@ -360,18 +363,17 @@ GET produce_index/_mapping
 ```
 Expected response from Elasticsearch:
 
-You will see that the mapping requirement with green check marks have all been customized in the mapping of produce_index. 
+Compared to the dynamic mapping, our customized mappign looks more simple and concise!  The current mapping satisfies the requirements that are marked with green check marks. 
+
 ![image](https://user-images.githubusercontent.com/60980933/121619679-3879b380-ca26-11eb-9ac9-ed19a52c05c2.png)
 ![image](https://user-images.githubusercontent.com/60980933/121619466-e5076580-ca25-11eb-8c59-ec2caf3ddb50.png)
 ![image](https://user-images.githubusercontent.com/60980933/121619506-f5b7db80-ca25-11eb-9916-fea11e8fd79d.png)
 
-Notice that the field botanical_name and vendor details object have been disabled. This means that the inverted index and doc values were not created for these fields. 
-
-Note that disabling a field or an object doesn't modify the original JSON object that was sent to Elasticsearch. These fields cannot be used in queries or aggregations but it is stored in the source field so you can still see it in the hits of a query. 
 
 **Step 6: Index your dataset into the new index**
 For simplicity's sake, we will index two documents. 
 
+*Document 1*
 Syntax:
 ```
 POST produce_index/_doc
@@ -395,7 +397,8 @@ POST produce_index/_doc
 Expected response from Elasticsearch:
 ![image](https://user-images.githubusercontent.com/60980933/121621403-5563b600-ca29-11eb-8ee9-83686a937fd2.png)
 
-The following document has almost identical fields as the first document except that it has a new field called organic set to true!
+*Document 2*
+The second document has almost identical fields as the first document except that it has an extra field called organic set to true!
 ```
 POST produce_index/_doc
 {
@@ -425,39 +428,96 @@ Example:
 GET produce_index/_mapping
 ```
 Expected response from Elasticsearch:
-The new field(organic) and its field type(boolean) have been added to the mapping! 
+The new field(organic) and its field type(boolean) have been added to the mapping. This is in line with the rules of mapping we discussed earlier. You can add new fields to the mapping. We just cannot change the mapping of an existing field! 
 
 ![image](https://user-images.githubusercontent.com/60980933/121694928-d2257d00-ca87-11eb-9141-77143d59081a.png)
 ![image](https://user-images.githubusercontent.com/60980933/121694969-db164e80-ca87-11eb-9ddf-479af3077c46.png)
 
+#### What if you do need to make changes to the field type? 
+Let's say your client changed his mind. He wants to run a full text search on the field botanical name we disabled earlier(no aggregation, sorting, or exact searches needed). 
 
+Remember, you CANNOT change the mapping of an existing field. If you do need to make changes to the existing field, type, you must create a new index with the desired mapping, then reindex all documents into the new index. 
 
-These two documents are successfully indexed according to the mapping we defined for the produce index. 
+**STEP 1: Create a new index(produce_v2) with the latest desired mapping.**
 
-Send this request to Elasticsearch and see what I mean.
-
-Syntax:
-```
-GET enter-name-of-the-index/_search
-```
+The mapping below 
 Example:
 ```
-GET produce_index/_search
+PUT produce_v2
+{
+  "mappings": {
+    "properties": {
+      "botanical_name": {
+        "type": "text"
+      },
+      "country_of_origin": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "date_purchased": {
+        "type": "date"
+      },
+      "description": {
+        "type": "text"
+      },
+      "name": {
+        "type": "text"
+      },
+      "organic": {
+        "type": "boolean"
+      },
+      "produce_type": {
+        "type": "keyword"
+      },
+      "quantity": {
+        "type": "long"
+      },
+      "unit_price": {
+        "type": "float"
+      },
+      "vendor_details": {
+        "type": "object",
+        "enabled": false
+      }
+    }
+  }
+}
 ```
-Expected response from Elasticsearch: 
+Expected response from Elasticsearch:
 
-![image](https://user-images.githubusercontent.com/60980933/121622158-bcce3580-ca2a-11eb-96f1-e6c238fe03d9.png)
-![image](https://user-images.githubusercontent.com/60980933/121622172-c6579d80-ca2a-11eb-9775-4ae390db4710.png)
+Elasticsearch creates a new index(produce_v2) with the latest mapping. 
+![image](https://user-images.githubusercontent.com/60980933/121725821-fb093a80-caa6-11eb-8e76-aa84704fb951.png)
 
-Elasticsearch retreives documents we indexed in the produce index. Remember how we disabled the field botanical_name and object vendor_details in our customized mapping? 
+If you check the mapping, you will see that the botanical_name field has been typed as text. 
+![image](https://user-images.githubusercontent.com/60980933/121725730-e036c600-caa6-11eb-8b9d-5a9ca0a72a3c.png)
+![image](https://user-images.githubusercontent.com/60980933/121725765-e88f0100-caa6-11eb-9610-97cbf980e6c2.png)
 
-Disabling a field only prevents inverted index and doc values from being created. It does not modify the original JSON object sent to Elasticsearch. 
+**STEP 2: Reindex the data from original index(produce_index) to the one you just created(produce_v2).**
+```
+POST _reindex
+{
+  "source": {
+    "index": "produce_index"
+  },
+  "dest": {
+    "index": "produce_v2"
+  }
+}
+```
+Expected response form Elasticsearch:
 
-While these fields cannot be used in queries or aggregation, these fields are still stored in the `_source` so you can still see it in the hits of a query! 
+This request moves data from the produce_index to the produce_v2 index. Now we can use the produce_v2 index to run requests that clients asked for.
 
-Notice that the field botanical_name and vendor_details object are displayed in the `_source` field. 
+![image](https://user-images.githubusercontent.com/60980933/121726550-ee391680-caa7-11eb-89a9-be1d4416e0e3.png)
 
-#### runtime field
+#### Runtime field
+![image](https://user-images.githubusercontent.com/60980933/121726752-348e7580-caa8-11eb-82ff-c248364438f6.png)
+
 ![image](https://user-images.githubusercontent.com/60980933/121622651-9b217e00-ca2b-11eb-8fa2-fed0d1129841.png)
 
 We have one last feature to work on! 
@@ -506,63 +566,7 @@ Expected response from Elasticsearch:
 ![image](https://user-images.githubusercontent.com/60980933/121706366-cc816480-ca92-11eb-9a84-e9d20c3b588d.png)
 ![image](https://user-images.githubusercontent.com/60980933/121706402-d4410900-ca92-11eb-8241-ae10cd68f7d2.png)
 
-#### What if you do need to make changes to the field type? 
-You must reindex the whole thing. 
-STEP 1: Create a new index(produce_v2) with the following mapping.
-Example:
-```
-PUT produce_v2
-{
-    "mappings" : {
-      "properties" : {
-        "country_of_origin" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
-            }
-          }
-        },
-        "date_received" : {
-          "type" : "date"
-        },
-        "description" : {
-          "type" : "text"
-        },
-        "name" : {
-          "type" : "text"
-        },
-        "organic" : {
-          "type" : "boolean"
-        },
-        "quantity" : {
-          "type" : "long"
-        },
-        "unit_price" : {
-          "type" : "float"
-        },
-        "vendor_details" : {
-          "type" : "object",
-          "enabled" : false
-        }
-      }
-    }
-  }
-}
-```
-STEP 2: Reindex the data from original index(produce) to the one you just created(produce_v2).
-```
-POST _reindex
-{
-  "source": {
-    "index": "produce"
-  },
-  "dest": {
-    "index": "produce_v2"
-  }
-}
-```
+
 ##### Dynamic template
 ```
 PUT Enter-name-of-index-here
@@ -615,3 +619,28 @@ GET test_v2/_mapping
 
 Expected response from Elasticsearch:
 The mapping shows the dynamic teamplates we have specified earlier when we defined the mapping. Under properties key, you will see that both fields category and city have been typed as keyword only. 
+
+These two documents are successfully indexed according to the mapping we defined for the produce index. 
+
+Send this request to Elasticsearch and see what I mean.
+
+Syntax:
+```
+GET enter-name-of-the-index/_search
+```
+Example:
+```
+GET produce_index/_search
+```
+Expected response from Elasticsearch: 
+
+![image](https://user-images.githubusercontent.com/60980933/121622158-bcce3580-ca2a-11eb-96f1-e6c238fe03d9.png)
+![image](https://user-images.githubusercontent.com/60980933/121622172-c6579d80-ca2a-11eb-9775-4ae390db4710.png)
+
+Elasticsearch retreives documents we indexed in the produce index. Remember how we disabled the field botanical_name and object vendor_details in our customized mapping? 
+
+Disabling a field only prevents inverted index and doc values from being created. It does not modify the original JSON object sent to Elasticsearch. 
+
+While these fields cannot be used in queries or aggregation, these fields are still stored in the `_source` so you can still see it in the hits of a query! 
+
+Notice that the field botanical_name and vendor_details object are displayed in the `_source` field. 
