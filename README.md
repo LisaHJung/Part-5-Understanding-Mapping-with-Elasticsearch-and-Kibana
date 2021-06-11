@@ -395,6 +395,7 @@ POST produce_index/_doc
 Expected response from Elasticsearch:
 ![image](https://user-images.githubusercontent.com/60980933/121621403-5563b600-ca29-11eb-8ee9-83686a937fd2.png)
 
+The following document has almost identical fields as the first document except that it has a new field called organic set to true!
 ```
 POST produce_index/_doc
 {
@@ -402,6 +403,7 @@ POST produce_index/_doc
   "botanical_name": "Harum Manis",
   "produce_type": "Fruit",
   "country_of_origin": "Indonesia",
+  "organic": true,
   "date_purchased": "2020-05-02T07:15:35",
   "quantity": 500,
   "unit_price": 1.5,
@@ -416,6 +418,19 @@ POST produce_index/_doc
 ```
 Expected response from Elasticsearch:
 ![image](https://user-images.githubusercontent.com/60980933/121621463-73c9b180-ca29-11eb-9849-955b8d7872fb.png)
+
+Let's see what happens to the mapping by sending this request below. 
+Example: 
+```
+GET produce_index/_mapping
+```
+Expected response from Elasticsearch:
+The new field(organic) and its field type(boolean) have been added to the mapping! 
+
+![image](https://user-images.githubusercontent.com/60980933/121694928-d2257d00-ca87-11eb-9141-77143d59081a.png)
+![image](https://user-images.githubusercontent.com/60980933/121694969-db164e80-ca87-11eb-9ddf-479af3077c46.png)
+
+
 
 These two documents are successfully indexed according to the mapping we defined for the produce index. 
 
@@ -460,25 +475,23 @@ PUT produce_index/_mapping
     }
   }
 }
+```
+Expected response from Elasticsearch: 
 
+Elasticsearch successfully adds runtime field to the mapping. 
+![image](https://user-images.githubusercontent.com/60980933/121705927-609efc00-ca92-11eb-95fe-4cc2d700cdd7.png)
+
+Check the mapping:
+```
+GET produce_index/_mapping
+```
+Expected response from Elasticsearch:
+![image](https://user-images.githubusercontent.com/60980933/121706959-5b8e7c80-ca93-11eb-8887-4524f80fc58b.png)
+![image](https://user-images.githubusercontent.com/60980933/121707004-63e6b780-ca93-11eb-9b97-b03e90663856.png)
+
+```
 GET produce_index/_search
 {
-  "query": {
-    "bool": {
-      "filter": [
-        {
-          "exists": {
-            "field": "unit_price"
-          }
-        },
-        {
-          "exists": {
-            "field": "quantity"
-          }
-        }
-      ]
-    }
-  },
   "aggregations": {
     "total": {
       "sum": {
@@ -487,10 +500,11 @@ GET produce_index/_search
     }
   }
 }
-
-
 ```
 Expected response from Elasticsearch:
+![image](https://user-images.githubusercontent.com/60980933/121706279-b673a400-ca92-11eb-9a5a-4d85699d661b.png)
+![image](https://user-images.githubusercontent.com/60980933/121706366-cc816480-ca92-11eb-9a84-e9d20c3b588d.png)
+![image](https://user-images.githubusercontent.com/60980933/121706402-d4410900-ca92-11eb-8241-ae10cd68f7d2.png)
 
 #### What if you do need to make changes to the field type? 
 You must reindex the whole thing. 
