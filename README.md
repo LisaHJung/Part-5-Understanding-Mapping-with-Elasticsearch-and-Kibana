@@ -373,8 +373,8 @@ Compared to the dynamic mapping, our customized mappign looks more simple and co
 **Step 6: Index your dataset into the new index**
 For simplicity's sake, we will index two documents. 
 
-*Document 1*
-Syntax:
+*Index first document *
+
 ```
 POST produce_index/_doc
 {
@@ -397,7 +397,8 @@ POST produce_index/_doc
 Expected response from Elasticsearch:
 ![image](https://user-images.githubusercontent.com/60980933/121621403-5563b600-ca29-11eb-8ee9-83686a937fd2.png)
 
-*Document 2*
+*Index second document*
+
 The second document has almost identical fields as the first document except that it has an extra field called organic set to true!
 ```
 POST produce_index/_doc
@@ -440,7 +441,6 @@ Remember, you CANNOT change the mapping of an existing field. If you do need to 
 
 **STEP 1: Create a new index(produce_v2) with the latest desired mapping.**
 
-The mapping below 
 Example:
 ```
 PUT produce_v2
@@ -494,6 +494,12 @@ Elasticsearch creates a new index(produce_v2) with the latest mapping.
 ![image](https://user-images.githubusercontent.com/60980933/121725821-fb093a80-caa6-11eb-8e76-aa84704fb951.png)
 
 If you check the mapping, you will see that the botanical_name field has been typed as text. 
+
+View the mapping of produce_v2:
+```
+GET produce_v2/_mapping
+```
+Expected response from Elasticsearch:
 ![image](https://user-images.githubusercontent.com/60980933/121725730-e036c600-caa6-11eb-8b9d-5a9ca0a72a3c.png)
 ![image](https://user-images.githubusercontent.com/60980933/121725765-e88f0100-caa6-11eb-9610-97cbf980e6c2.png)
 
@@ -515,13 +521,30 @@ This request moves data from the produce_index to the produce_v2 index. Now we c
 
 ![image](https://user-images.githubusercontent.com/60980933/121726550-ee391680-caa7-11eb-89a9-be1d4416e0e3.png)
 
-#### Runtime field
-![image](https://user-images.githubusercontent.com/60980933/121622651-9b217e00-ca2b-11eb-8fa2-fed0d1129841.png)
+#### Runtime Field
 ![image](https://user-images.githubusercontent.com/60980933/121733294-8935ee80-cab0-11eb-8314-4c335a93911d.png)
+![image](https://user-images.githubusercontent.com/60980933/121749036-3b78b080-cac7-11eb-8706-561a1bb61315.png)
+![image](https://user-images.githubusercontent.com/60980933/121749523-09b41980-cac8-11eb-8214-e986760e5d96.png)
 
 We have one last feature to work on! 
 
-Example: 
+Create a run time field in produce_v2 index. 
+
+Syntax:
+```
+PUT Enter-name-of-index/_mapping
+{
+  "runtime": {
+    "Name-your-runtime-field-here": {
+      "type": "Specify-field-type-here",
+      "script": {
+        "source": "Specify the formula you want executed"
+      }
+    }
+  }
+}
+```
+Example:
 ```
 PUT produce_v2/_mapping
 {
@@ -552,10 +575,26 @@ Elasticsearch adds runtime field to the mapping up top. Note that the runtime fi
 ![image](https://user-images.githubusercontent.com/60980933/121744120-a7efb180-cabf-11eb-9a7b-3e38e83297e3.png)
 
 Run a sum aggregation on the field total in the produce_v2 index. 
+
+Syntax:
+```
+GET Enter_name_of_the_index_here/_search
+{
+  "aggs": {
+    "Name your aggregations here": {
+      "Specify the aggregation type here": {
+        "field": "Name the field you want to aggregate on here"
+      }
+    }
+  }
+}
+```
+
 Example:
 ```
 GET produce_v2/_search
 {
+  "size": 0,
   "aggregations": {
     "total_expense": {
       "sum": {
@@ -570,4 +609,4 @@ Expected response from Elasticsearch:
 ![image](https://user-images.githubusercontent.com/60980933/121706366-cc816480-ca92-11eb-9a84-e9d20c3b588d.png)
 ![image](https://user-images.githubusercontent.com/60980933/121706402-d4410900-ca92-11eb-8241-ae10cd68f7d2.png)
 
-For more 
+For more information on runtime fields, check out this [blog](https://www.elastic.co/blog/introducing-elasticsearch-runtime-fields) 
