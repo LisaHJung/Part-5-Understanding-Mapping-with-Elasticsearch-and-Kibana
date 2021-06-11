@@ -521,12 +521,12 @@ This request moves data from the produce_index to the produce_v2 index. Now we c
 
 We have one last feature to work on! 
 
+Example: 
 ```
-
-PUT produce_index/_mapping
+PUT produce_v2/_mapping
 {
   "runtime": {
-    "total_expense": {
+    "total": {
       "type": "double",
       "script": {
         "source": "emit(doc['unit_price'].value* doc['quantity'].value)"
@@ -538,23 +538,28 @@ PUT produce_index/_mapping
 Expected response from Elasticsearch: 
 
 Elasticsearch successfully adds runtime field to the mapping. 
-![image](https://user-images.githubusercontent.com/60980933/121705927-609efc00-ca92-11eb-95fe-4cc2d700cdd7.png)
+![image](https://user-images.githubusercontent.com/60980933/121744031-8393d500-cabf-11eb-850c-2e13cf79a92a.png)
 
 Check the mapping:
 ```
-GET produce_index/_mapping
+GET produce_v2/_mapping
 ```
 Expected response from Elasticsearch:
-![image](https://user-images.githubusercontent.com/60980933/121706959-5b8e7c80-ca93-11eb-8887-4524f80fc58b.png)
-![image](https://user-images.githubusercontent.com/60980933/121707004-63e6b780-ca93-11eb-9b97-b03e90663856.png)
 
+Elasticsearch adds runtime field to the mapping up top. Note that the runtime field is not listed under properties. This is because the runtime field is not indexed!! The runtime field total is only created and calculated at runtime as you execute your request. 
+
+![image](https://user-images.githubusercontent.com/60980933/121744102-a1613a00-cabf-11eb-98f0-15c25ab97773.png)
+![image](https://user-images.githubusercontent.com/60980933/121744120-a7efb180-cabf-11eb-9a7b-3e38e83297e3.png)
+
+Run a sum aggregation on the field total in the produce_v2 index. 
+Example:
 ```
-GET produce_index/_search
+GET produce_v2/_search
 {
   "aggregations": {
-    "total": {
+    "total_expense": {
       "sum": {
-        "field": "total_expense"
+        "field": "total"
       }
     }
   }
@@ -565,81 +570,4 @@ Expected response from Elasticsearch:
 ![image](https://user-images.githubusercontent.com/60980933/121706366-cc816480-ca92-11eb-9a84-e9d20c3b588d.png)
 ![image](https://user-images.githubusercontent.com/60980933/121706402-d4410900-ca92-11eb-8241-ae10cd68f7d2.png)
 
-
-##### Dynamic template
-```
-PUT Enter-name-of-index-here
-{
-  "mappings": {
-    "dynamic_templates": [
-      {
-        "Name-your-template-here": {
-          "match_mapping_type": "string",
-          "mapping": {
-            "type": "keyword"
-          }
-        }
-      }
-    ]
-  }
-}
-```
-```
-PUT test_v2
-{
-  "mappings": {
-    "dynamic_templates": [
-      {
-        "string_fields": {
-          "match_mapping_type": "string",
-          "mapping": {
-            "type": "keyword"
-          }
-        }
-      }
-    ]
-  }
-}
-```
-Expected response from Elasticsearch:
-![image](https://user-images.githubusercontent.com/60980933/121422110-1bf95080-c92c-11eb-866e-6e3d50fb06cb.png)
-
-check to see if it worked
-```
-PUT test_v2/_doc/1
-{
-  "category": "news",
-  "city": "Denver"
-}
-```
-```
-GET test_v2/_mapping
-```
-
-Expected response from Elasticsearch:
-The mapping shows the dynamic teamplates we have specified earlier when we defined the mapping. Under properties key, you will see that both fields category and city have been typed as keyword only. 
-
-These two documents are successfully indexed according to the mapping we defined for the produce index. 
-
-Send this request to Elasticsearch and see what I mean.
-
-Syntax:
-```
-GET enter-name-of-the-index/_search
-```
-Example:
-```
-GET produce_index/_search
-```
-Expected response from Elasticsearch: 
-
-![image](https://user-images.githubusercontent.com/60980933/121622158-bcce3580-ca2a-11eb-96f1-e6c238fe03d9.png)
-![image](https://user-images.githubusercontent.com/60980933/121622172-c6579d80-ca2a-11eb-9775-4ae390db4710.png)
-
-Elasticsearch retreives documents we indexed in the produce index. Remember how we disabled the field botanical_name and object vendor_details in our customized mapping? 
-
-Disabling a field only prevents inverted index and doc values from being created. It does not modify the original JSON object sent to Elasticsearch. 
-
-While these fields cannot be used in queries or aggregation, these fields are still stored in the `_source` so you can still see it in the hits of a query! 
-
-Notice that the field botanical_name and vendor_details object are displayed in the `_source` field. 
+For more 
