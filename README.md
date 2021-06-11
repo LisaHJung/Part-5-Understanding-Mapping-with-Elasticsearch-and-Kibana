@@ -179,7 +179,7 @@ For each document, the document id along with the field value(original string) a
   }
 }
 ```
-** Plan of Action **
+**Plan of Action**
 ![image](https://user-images.githubusercontent.com/60980933/121604139-3eac6780-ca07-11eb-90eb-2214e2c5cbd4.png)
 ![image](https://user-images.githubusercontent.com/60980933/121604166-4704a280-ca07-11eb-9fc6-eb494ec92699.png)
 ![image](https://user-images.githubusercontent.com/60980933/121604184-4c61ed00-ca07-11eb-84f8-208c3e927a08.png)
@@ -193,8 +193,9 @@ Rules
 3. ONE mapping is defined per index. Once the index has been created, we can only add *new* fields to a mapping. We CANNOT change the mapping of an *existing* field. 
 4. If you must change the type of an existing field, you must create a new index with the desired mapping, then reindex all documents into the new index. 
 
-Step 1: Index a sample document into a test index. 
-The sample document must contain the fields that you want to define. These fields must also contain values that map closely to the field types that you want. 
+**Step 1: Index a sample document into a test index.**
+
+The sample document must contain the fields that you want to define. These fields must also contain values that map closely to the field types you want. 
 
 Syntax:
 ```
@@ -203,7 +204,6 @@ POST Name-of-test-index/_doc
   "field": "value"
 }
 ```
-
 Example:
 ```
 POST test_index/_doc
@@ -224,7 +224,12 @@ POST test_index/_doc
   }
 }
 ```
-Step 2: View the dynamic mapping 
+Expected response from Elasticsearch:
+
+The test_index has been successfully created. 
+![image](https://user-images.githubusercontent.com/60980933/121616770-c81c6380-ca20-11eb-9f3a-593e61eff319.png)
+
+**Step 2: View the dynamic mapping** 
 
 Syntax:
 ```
@@ -235,15 +240,63 @@ Example:
 ```
 GET test_index/_mapping
 ```
-Step 3: Edit the mapping
+Expected response from Elasticsearch:
+
+Elasticsearch will display the mapping it has created. It lists the fields in alphabetical order. This document is identical to the one we indexed into temp_index. To save space, the screenshots of the mapping has not been included here. 
+
+**Step 3: Edit the mapping**
 Copy and paste the mapping from step 2 into the Kibana console. Edit the mapping to fit your use case. 
 
-Step 4: Create a new index using your customized mappings from step 3. 
+![image](https://user-images.githubusercontent.com/60980933/121617475-3b72a500-ca22-11eb-885b-4fab72db17b5.png)
+
+Your edited mapping should look like the following: 
+```
+{
+  "mappings": {
+    "properties": {
+      "botanical_name": {
+        "enabled": false
+      },
+      "country_of_origin": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      },
+      "date_purchased": {
+        "type": "date"
+      },
+      "description": {
+        "type": "text"
+      },
+      "name": {
+        "type": "text"
+      },
+      "produce_type": {
+        "type": "keyword"
+      },
+      "quantity": {
+        "type": "long"
+      },
+      "unit_price": {
+        "type": "float"
+      },
+      "vendor_details": {
+        "enabled": false
+      }
+    }
+  }
+}
+```
+**Step 4: Create a new index using your customized mappings from step 3.** 
+
 Syntax:
 ```
 PUT Name-of-your-final-index
 {
-  copy and paste your editied mapping here
+  copy and paste your edited mapping here
 }
 ```
 Example: 
@@ -288,7 +341,13 @@ PUT produce_index
   }
 }
 ```
-Step 5: Check the mapping of the new index to make sure the all the fields have been mapped correctly
+Expected response from Elasticsearch:
+
+Elasticsearch creates a produce_index with the customized mapping we defined above! 
+
+![image](https://user-images.githubusercontent.com/60980933/121618138-89d47380-ca23-11eb-96e3-68204da782dc.png)
+
+**Step 5: Check the mapping of the new index to make sure the all the fields have been mapped correctly**
 
 Syntax:
 ```
@@ -299,14 +358,95 @@ Example:
 ```
 GET produce_index/_mapping
 ```
-#### Adding a new field to the mapping of an existing index
+Expected response from Elasticsearch:
+
+You will see that the mapping requirement with green check marks have all been customized in the mapping of produce_index. 
+![image](https://user-images.githubusercontent.com/60980933/121619679-3879b380-ca26-11eb-9ac9-ed19a52c05c2.png)
+![image](https://user-images.githubusercontent.com/60980933/121619466-e5076580-ca25-11eb-8c59-ec2caf3ddb50.png)
+![image](https://user-images.githubusercontent.com/60980933/121619506-f5b7db80-ca25-11eb-9916-fea11e8fd79d.png)
+
+Notice that the field botanical_name and vendor details object have been disabled. This means that the inverted index and doc values were not created for these fields. 
+
+Note that disabling a field or an object doesn't modify the original JSON object that was sent to Elasticsearch. These fields cannot be used in queries or aggregations but it is stored in the source field so you can still see it in the hits of a query. 
+
+**Step 6: Index your dataset into the new index**
+For simplicity's sake, we will index two documents. 
+
+Syntax:
 ```
-PUT produce_index/_doc/2
+POST produce_index/_doc
 {
-  "organic": true
+  "name": "Pineapple",
+  "botanical_name": "Ananas comosus",
+  "produce_type": "Fruit",
+  "country_of_origin": "New Zealand",
+  "date_purchased": "2020-06-02T12:15:35",
+  "quantity": 200,
+  "unit_price": 3.11,
+  "description": "a large juicy tropical fruit consisting of aromatic edible yellow flesh surrounded by a tough segmented skin and topped with a tuft of stiff leaves.These pineapples are sourced from New Zealand.",
+  "vendor_details": {
+    "vendor": "Tropical Fruit Growers of New Zealand",
+    "main_contact": "Hugh Rose",
+    "vendor_location": "Whangarei, New Zealand",
+    "preferred_vendor": true
+  }
 }
 ```
+Expected response from Elasticsearch:
+![image](https://user-images.githubusercontent.com/60980933/121621403-5563b600-ca29-11eb-8ee9-83686a937fd2.png)
+
+```
+POST produce_index/_doc
+{
+  "name": "Mango",
+  "botanical_name": "Harum Manis",
+  "produce_type": "Fruit",
+  "country_of_origin": "Indonesia",
+  "date_purchased": "2020-05-02T07:15:35",
+  "quantity": 500,
+  "unit_price": 1.5,
+  "description": "Mango Arumanis or Harum Manis is originated from East Java. Arumanis means harum dan manis or fragrant and sweet just like its taste. The ripe Mango Arumanis has dark green skin coated with thin grayish natural wax. The flesh is deep yellow, thick, and soft with little to no fiber. Mango Arumanis is best eaten when ripe.",
+  "vendor_details": {
+    "vendor": "Ayra Shezan Trading",
+    "main_contact": "Suharto",
+    "vendor_location": "Binjai, Indonesia",
+    "preferred_vendor": true
+  }
+}
+```
+Expected response from Elasticsearch:
+![image](https://user-images.githubusercontent.com/60980933/121621463-73c9b180-ca29-11eb-9849-955b8d7872fb.png)
+
+These two documents are successfully indexed according to the mapping we defined for the produce index. 
+
+Send this request to Elasticsearch and see what I mean.
+
+Syntax:
+```
+GET enter-name-of-the-index/_search
+```
+Example:
+```
+GET produce_index/_search
+```
+Expected response from Elasticsearch: 
+
+![image](https://user-images.githubusercontent.com/60980933/121622158-bcce3580-ca2a-11eb-96f1-e6c238fe03d9.png)
+![image](https://user-images.githubusercontent.com/60980933/121622172-c6579d80-ca2a-11eb-9775-4ae390db4710.png)
+
+Elasticsearch retreives documents we indexed in the produce index. Remember how we disabled the field botanical_name and object vendor_details in our customized mapping? 
+
+Disabling a field only prevents inverted index and doc values from being created. It does not modify the original JSON object sent to Elasticsearch. 
+
+While these fields cannot be used in queries or aggregation, these fields are still stored in the `_source` so you can still see it in the hits of a query! 
+
+Notice that the field botanical_name and vendor_details object are displayed in the `_source` field. 
+
 #### runtime field
+![image](https://user-images.githubusercontent.com/60980933/121622651-9b217e00-ca2b-11eb-8fa2-fed0d1129841.png)
+
+We have one last feature to work on! 
+
 ```
 
 PUT produce_index/_mapping
