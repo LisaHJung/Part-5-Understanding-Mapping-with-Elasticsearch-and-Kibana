@@ -26,7 +26,7 @@ This workshop is a part of the Beginner's Crash Course to Elastic Stack series. 
 
 [Instructions](https://dev.to/elastic/downloading-elasticsearch-and-kibana-macos-linux-and-windows-1mmo) for downloading Elasticsearch and Kibana
 
-[Presentation slides]()
+[Presentation Slides](https://github.com/LisaHJung/Part-5-Understanding-Mapping-with-Elasticsearch-and-Kibana/blob/main/Part%205_%20Understanding%20Mapping%20with%20Elasticsearch%20and%20Kibana.pdf)
 
 [Elastic America Virtual Chapter](https://community.elastic.co/amer-virtual/): 
 
