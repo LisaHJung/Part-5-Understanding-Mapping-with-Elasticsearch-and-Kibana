@@ -53,8 +53,10 @@ Example:
 POST temp_index/_doc
 {
   "name": "Pineapple",
+  "botanical_name": "Ananas comosus",
+  "produce_type": "Fruit",
   "country_of_origin": "New Zealand",
-  "date_received": "2020-06-02T12:15:35",
+  "date_purchased": "2020-06-02T12:15:35",
   "quantity": 200,
   "unit_price": 3.11,
   "description": "a large juicy tropical fruit consisting of aromatic edible yellow flesh surrounded by a tough segmented skin and topped with a tuft of stiff leaves.These pineapples are sourced from New Zealand.",
@@ -64,7 +66,6 @@ POST temp_index/_doc
     "vendor_location": "Whangarei, New Zealand",
     "preferred_vendor": true
   }
-}
 ```
 Expected response from Elasticsearch:
 
@@ -117,7 +118,7 @@ By default, every string gets mapped twice as a text field and as a keyword mult
 
 `Keyword`field type is designed for exact searches, aggregations, and sorting.
 
-You can customize your mapping by assigning the filed type as either text or keyword or both! 
+You can customize your mapping by assigning the field type as either text or keyword or both! 
 
 #### Text Field Type
 ##### Text Analysis
@@ -147,7 +148,14 @@ For each document, the document id along with the field value(original string) a
 
 ![image](https://user-images.githubusercontent.com/60980933/121603436-fccef180-ca05-11eb-817e-cb77b46ae969.png)
 
-### Mapping exercise
+Now when Elasticsearch dynamically creates a mapping for you, it doesn’t know what you want to use a string for so it maps all strings to both field types. 
+But you don’t always need both. [breathe]
+In THAT case the default setting is really wasteful because it slows down indexing and takes up more disk space.  
+So defining our own mapping could help us store and search data more efficiently.
+Defining our own mapping takes more planning because we need to decide what type of actions we want to perform on these fields. 
+So we can designate which string fields will only be full text searchable, or only be used in aggregation or be able to support both options. 
+
+### Mapping Exercise
 
 **Project**: Build an app for a client who manages a produce warehouse 
 
@@ -183,8 +191,10 @@ For each document, the document id along with the field value(original string) a
 ![image](https://user-images.githubusercontent.com/60980933/121710560-f89ee480-ca96-11eb-98c5-ba9a535e4360.png)
 ![image](https://user-images.githubusercontent.com/60980933/121604166-4704a280-ca07-11eb-9fc6-eb494ec92699.png)
 ![image](https://user-images.githubusercontent.com/60980933/121604184-4c61ed00-ca07-11eb-84f8-208c3e927a08.png)
-![image](https://user-images.githubusercontent.com/60980933/121713123-ba56f480-ca99-11eb-9da9-72ce8f3995ac.png)
-![image](https://user-images.githubusercontent.com/60980933/121713301-effbdd80-ca99-11eb-9c1c-bce14b41a9ac.png)
+![image](https://user-images.githubusercontent.com/60980933/122100555-8ac52680-cdd0-11eb-843f-556fa5313e15.png)
+![image](https://user-images.githubusercontent.com/60980933/121749036-3b78b080-cac7-11eb-8706-561a1bb61315.png)
+![image](https://user-images.githubusercontent.com/60980933/121749523-09b41980-cac8-11eb-8214-e986760e5d96.png)
+![image](https://user-images.githubusercontent.com/60980933/122100826-d972c080-cdd0-11eb-995c-048e6709ef57.png)
 
 ### Defining your own mapping
 **Rules**
@@ -248,7 +258,7 @@ Elasticsearch will display the mapping it has created. It lists the fields in al
 
 Copy and paste the mapping from step 2 into the Kibana console. From the pasted results, remove the test index along with its opening and closing brackets. Edit the mapping to fit your use case. 
 
-![image](https://user-images.githubusercontent.com/60980933/121617475-3b72a500-ca22-11eb-885b-4fab72db17b5.png)
+![image](https://user-images.githubusercontent.com/60980933/122103275-ad0c7380-cdd3-11eb-9a74-babe7442e5b3.png)
 
 Your edited mapping should look like the following: 
 ```
@@ -291,9 +301,9 @@ Your edited mapping should look like the following:
   }
 }
 ```
-![image](https://user-images.githubusercontent.com/60980933/121721478-87b0fa00-caa1-11eb-81c2-aac579020b38.png)
+![image](https://user-images.githubusercontent.com/60980933/122103954-68350c80-cdd4-11eb-82c4-83b47bc364dc.png)
 
-**Step 4: Create a new index using your customized mappings from step 3.** 
+**Step 4: Create a new index with the customized mapping from step 3.** 
 
 Syntax:
 ```
@@ -522,7 +532,7 @@ This request moves data from the produce_index to the produce_v2 index. Now we c
 ![image](https://user-images.githubusercontent.com/60980933/121726550-ee391680-caa7-11eb-89a9-be1d4416e0e3.png)
 
 #### Runtime Field
-![image](https://user-images.githubusercontent.com/60980933/121733294-8935ee80-cab0-11eb-8314-4c335a93911d.png)
+![image](https://user-images.githubusercontent.com/60980933/122100555-8ac52680-cdd0-11eb-843f-556fa5313e15.png)
 ![image](https://user-images.githubusercontent.com/60980933/121749036-3b78b080-cac7-11eb-8706-561a1bb61315.png)
 ![image](https://user-images.githubusercontent.com/60980933/121749523-09b41980-cac8-11eb-8214-e986760e5d96.png)
 
