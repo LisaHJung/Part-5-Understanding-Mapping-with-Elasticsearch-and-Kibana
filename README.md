@@ -43,7 +43,7 @@ The following request will index the following document.
 
 Syntax: 
 ```
-PUT Enter-name-of-the-index/_doc/id-you-want-to-assign-to-this-document
+POST Enter-name-of-the-index/_doc
 {
   "field": "value"
 }
@@ -69,7 +69,7 @@ POST temp_index/_doc
 ```
 Expected response from Elasticsearch:
 
-Elasticsearch will confirm that this document has been successfully indexed in the temp_index. 
+Elasticsearch will confirm that this document has been successfully indexed into the temp_index. 
 ![image](https://user-images.githubusercontent.com/60980933/120387213-d5ca3e80-c2e6-11eb-8ca8-731222174724.png)
 
 ## Mapping Explained
@@ -86,7 +86,7 @@ When a user does not define mapping in advance, Elasticsearch creates or updates
 
 With `dynamic mapping`, Elasticsearch looks at each field and tries to infer the data type from the field content. Then, it assigns a type to each field and creates a list of field names and types known as mapping.  
 
-Depending on the assigned field type, each field is indexed and primed for different types of search. This is why mapping plays an important role in how Elasticsearch stores and searches for data. 
+Depending on the assigned field type, each field is indexed and primed for different types of search(full text search, aggregations, sorting). This is why mapping plays an important role in how Elasticsearch stores and searches for data. 
 
 ### View the Mapping 
 Syntax:
@@ -130,14 +130,14 @@ By default, strings are analyzed when it is indexed. The string is broken up int
 
 **Inverted Index**
 ![image](https://user-images.githubusercontent.com/60980933/121099236-b33b9800-c7b4-11eb-837b-a914ed8e3725.png)
-Once the string is analyzed, the individual tokens are stored in a sorted list known as the `inverted index`. Each unique token is stored in the index with its relevant ID. 
+Once the string is analyzed, the individual tokens are stored in a sorted list known as the `inverted index`. Each unique token is stored in the `inverted index` with its associated ID. 
 
 The same process occurs every time you index a new document. 
 
-![image](https://user-images.githubusercontent.com/60980933/120848060-8c216400-c531-11eb-9fed-6cfd5b50d7c8.png)
-![image](https://user-images.githubusercontent.com/60980933/120851449-14096d00-c536-11eb-88d6-08add98441db.png)
-![image](https://user-images.githubusercontent.com/60980933/121601915-cdb78080-ca03-11eb-81ad-9265cffc8581.png)
-![image](https://user-images.githubusercontent.com/60980933/121113584-89439f00-c7cf-11eb-80a8-22b39f230ef9.png)
+![image](https://user-images.githubusercontent.com/60980933/122119940-0d58e080-cde7-11eb-903b-54a628b8de60.png)
+![image](https://user-images.githubusercontent.com/60980933/122119962-147fee80-cde7-11eb-915e-3531c405a315.png)
+![image](https://user-images.githubusercontent.com/60980933/122119979-19dd3900-cde7-11eb-86e4-274b5e44fec2.png)
+![image](https://user-images.githubusercontent.com/60980933/122120075-324d5380-cde7-11eb-9b4e-744dfa6d527d.png)
 
 #### Keyword Field Type
 `Keyword` field type is used for aggregations, sorting, and exact searches. These actions look up the document ID to find the values it has in its fields. 
@@ -148,12 +148,10 @@ For each document, the document id along with the field value(original string) a
 
 ![image](https://user-images.githubusercontent.com/60980933/121603436-fccef180-ca05-11eb-817e-cb77b46ae969.png)
 
-Now when Elasticsearch dynamically creates a mapping for you, it doesn’t know what you want to use a string for so it maps all strings to both field types. 
-But you don’t always need both. [breathe]
-In THAT case the default setting is really wasteful because it slows down indexing and takes up more disk space.  
-So defining our own mapping could help us store and search data more efficiently.
-Defining our own mapping takes more planning because we need to decide what type of actions we want to perform on these fields. 
-So we can designate which string fields will only be full text searchable, or only be used in aggregation or be able to support both options. 
+When Elasticsearch dynamically creates a mapping for you, it does not know what you want to use a string for so it maps all strings to both field types. 
+In case where you do not need both field types, the default setting is wasteful because it slows down indexing and takes up more disk space.  Defining our own mapping could help us store and search data more efficiently.
+
+Defining our own mapping takes more planning because we need to decide what type of actions we want to perform on these fields. With this in mind, we can designate which string fields will only be used for full text search or only for aggregation or be able to support both options. 
 
 ### Mapping Exercise
 
@@ -162,7 +160,7 @@ So we can designate which string fields will only be full text searchable, or on
 **This app must enable users to:** 
 1. Search for produce name, country of origin and description
 
-2. Identify top countries of origin where the client buys most produce from
+2. Identify top countries of origin with the most frequent purchase history
 
 3. Sort produce by produce type(Fruit or Vegetable)
 
@@ -189,7 +187,7 @@ So we can designate which string fields will only be full text searchable, or on
 ```
 **Plan of Action**
 ![image](https://user-images.githubusercontent.com/60980933/121710560-f89ee480-ca96-11eb-98c5-ba9a535e4360.png)
-![image](https://user-images.githubusercontent.com/60980933/121604166-4704a280-ca07-11eb-9fc6-eb494ec92699.png)
+![image](https://user-images.githubusercontent.com/60980933/122120548-cc150080-cde7-11eb-8613-a4ec5a5c115e.png)
 ![image](https://user-images.githubusercontent.com/60980933/121604184-4c61ed00-ca07-11eb-84f8-208c3e927a08.png)
 ![image](https://user-images.githubusercontent.com/60980933/122100555-8ac52680-cdd0-11eb-843f-556fa5313e15.png)
 ![image](https://user-images.githubusercontent.com/60980933/121749036-3b78b080-cac7-11eb-8706-561a1bb61315.png)
@@ -198,7 +196,7 @@ So we can designate which string fields will only be full text searchable, or on
 
 ### Defining your own mapping
 **Rules**
-1. If you do not define a mapping ahead of time, Elastcisearch dynamically creates the mapping if it doesn't exist. 
+1. If you do not define a mapping ahead of time, Elastcisearch dynamically creates the mapping for you.
 2. If you do decide to define your own mapping, you can do so at index creation.
 3. ONE mapping is defined per index. Once the index has been created, we can only add *new* fields to a mapping. We CANNOT change the mapping of an *existing* field. 
 4. If you must change the type of an existing field, you must create a new index with the desired mapping, then reindex all documents into the new index. 
@@ -256,11 +254,11 @@ Elasticsearch will display the mapping it has created. It lists the fields in al
 
 **Step 3: Edit the mapping**
 
-Copy and paste the mapping from step 2 into the Kibana console. From the pasted results, remove the test index along with its opening and closing brackets. Edit the mapping to fit your use case. 
+Copy and paste the mapping from step 2 into the Kibana console. From the pasted results, remove the test index along with its opening and closing brackets. Edit the mapping to satisfy the requirements of your use case.  
 
 ![image](https://user-images.githubusercontent.com/60980933/122103275-ad0c7380-cdd3-11eb-9a74-babe7442e5b3.png)
 
-Your edited mapping should look like the following: 
+The optimized mapping should look like the following: 
 ```
 {
   "mappings": {
@@ -406,6 +404,8 @@ POST produce_index/_doc
 }
 ```
 Expected response from Elasticsearch:
+
+Elasticsearch has successfully indexed the first document. 
 ![image](https://user-images.githubusercontent.com/60980933/121621403-5563b600-ca29-11eb-8ee9-83686a937fd2.png)
 
 *Index second document*
@@ -432,6 +432,8 @@ POST produce_index/_doc
 }
 ```
 Expected response from Elasticsearch:
+
+Elasticsearch has successfully indexed the second document. 
 ![image](https://user-images.githubusercontent.com/60980933/121621463-73c9b180-ca29-11eb-9849-955b8d7872fb.png)
 
 Let's see what happens to the mapping by sending this request below: 
@@ -439,18 +441,20 @@ Let's see what happens to the mapping by sending this request below:
 GET produce_index/_mapping
 ```
 Expected response from Elasticsearch:
-The new field(organic) and its field type(boolean) have been added to the mapping. This is in line with the rules of mapping we discussed earlier. You can add new fields to the mapping. We just cannot change the mapping of an existing field! 
+
+The new field(organic) and its field type(boolean) have been added to the mapping. This is in line with the rules of mapping we discussed earlier since you can add *new* fields to the mapping. We just cannot change the mapping of an *existing* field! 
 
 ![image](https://user-images.githubusercontent.com/60980933/121694928-d2257d00-ca87-11eb-9141-77143d59081a.png)
 ![image](https://user-images.githubusercontent.com/60980933/121694969-db164e80-ca87-11eb-9ddf-479af3077c46.png)
 
 #### What if you do need to make changes to the field type? 
-Let's say your client changed his mind. He wants to run a full text search on the field botanical name we disabled earlier(no aggregation, sorting, or exact searches needed). 
+Let's say your client changed his mind. He wants to run only full text search on the field botanical name we disabled earlier. 
 
-Remember, you CANNOT change the mapping of an existing field. If you do need to make changes to the existing field, type, you must create a new index with the desired mapping, then reindex all documents into the new index. 
+Remember, you CANNOT change the mapping of an *existing* field. If you do need to make changes to the existing field, you must create a new index with the desired mapping, then reindex all documents into the new index. 
 
-**STEP 1: Create a new index(produce_v2) with the latest desired mapping.**
+**STEP 1: Create a new index(produce_v2) with the latest mapping.**
 
+We removed the enabled parameter from the field botanical_name and changed its type to text. 
 Example:
 ```
 PUT produce_v2
@@ -505,7 +509,7 @@ Elasticsearch creates a new index(produce_v2) with the latest mapping.
 
 If you check the mapping, you will see that the botanical_name field has been typed as text. 
 
-View the mapping of produce_v2:
+*View the mapping of produce_v2:*
 ```
 GET produce_v2/_mapping
 ```
@@ -527,7 +531,7 @@ POST _reindex
 ```
 Expected response form Elasticsearch:
 
-This request moves data from the produce_index to the produce_v2 index. Now we can use the produce_v2 index to run requests that clients asked for.
+This request moves data from the produce_index to the produce_v2 index. produce_v2 index can now be used to run the requests that the client has specified. 
 
 ![image](https://user-images.githubusercontent.com/60980933/121726550-ee391680-caa7-11eb-89a9-be1d4416e0e3.png)
 
@@ -536,7 +540,7 @@ This request moves data from the produce_index to the produce_v2 index. Now we c
 ![image](https://user-images.githubusercontent.com/60980933/121749036-3b78b080-cac7-11eb-8706-561a1bb61315.png)
 ![image](https://user-images.githubusercontent.com/60980933/121749523-09b41980-cac8-11eb-8214-e986760e5d96.png)
 
-**Step 1:Create a run time field and add it to the mapping of the existing index.** 
+**Step 1: Create a `runtime field` and add it to the mapping of the existing index.** 
 
 Syntax:
 ```
@@ -568,7 +572,7 @@ PUT produce_v2/_mapping
 ```
 Expected response from Elasticsearch: 
 
-Elasticsearch successfully adds runtime field to the mapping. 
+Elasticsearch successfully adds the `runtime field` to the mapping. 
 ![image](https://user-images.githubusercontent.com/60980933/121744031-8393d500-cabf-11eb-850c-2e13cf79a92a.png)
 
 **Step 2: Check the mapping:**
@@ -577,7 +581,7 @@ GET produce_v2/_mapping
 ```
 Expected response from Elasticsearch:
 
-Elasticsearch adds a runtime field to the mapping up top. Note that the runtime field is not listed under properties. This is because the runtime field is not indexed!! The runtime field total is only created and calculated at runtime as you execute your request. 
+Elasticsearch adds a `runtime field` to the mapping up top. Note that the `runtime field` is not listed under properties. This is because `runtime field` is not indexed! The `runtime field` total is only created and calculated at runtime as you execute your request. 
 
 ![image](https://user-images.githubusercontent.com/60980933/121744102-a1613a00-cabf-11eb-98f0-15c25ab97773.png)
 ![image](https://user-images.githubusercontent.com/60980933/121744120-a7efb180-cabf-11eb-9a7b-3e38e83297e3.png)
@@ -613,8 +617,11 @@ GET produce_v2/_search
 }
 ```
 Expected response from Elasticsearch:
+
+When this request is sent, a `Runtime field` called total is created and calculated for documents within scope of our request. Then, the sum aggregation requests is performed on the field total to yield total expense. 
+
 ![image](https://user-images.githubusercontent.com/60980933/121815555-50268700-cc34-11eb-8fb4-8112cb8e0806.png)
 
-`Runtime field` is only created and calculated when the request is being executed. `Runtime fields` are not indexed so these do not take up disk space.  We also didn’t have to update the mapping and reindex in order to add a new field to existing documents. 
+`Runtime field` is only created and calculated when the request is being executed. `Runtime fields` are not indexed so these do not take up disk space.  We also didn’t have to reindex in order to add a new field to existing documents. 
 
 For more information on runtime fields, check out this [blog](https://www.elastic.co/blog/introducing-elasticsearch-runtime-fields)! 
