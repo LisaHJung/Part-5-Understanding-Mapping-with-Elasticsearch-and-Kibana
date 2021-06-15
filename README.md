@@ -71,7 +71,7 @@ Expected response from Elasticsearch:
 Elasticsearch will confirm that this document has been successfully indexed in the temp_index. 
 ![image](https://user-images.githubusercontent.com/60980933/120387213-d5ca3e80-c2e6-11eb-8ca8-731222174724.png)
 
-## Mapping
+## Mapping Explained
 Mapping determines how a document and its fields are indexed and stored by defining the type of each field.  
 
 ![image](https://user-images.githubusercontent.com/60980933/121219417-e7f53100-c840-11eb-9848-7acb3df84227.png)
@@ -371,9 +371,10 @@ Compared to the dynamic mapping, our customized mappign looks more simple and co
 
 
 **Step 6: Index your dataset into the new index**
+
 For simplicity's sake, we will index two documents. 
 
-*Index first document *
+*Index first document*
 
 ```
 POST produce_index/_doc
@@ -423,8 +424,7 @@ POST produce_index/_doc
 Expected response from Elasticsearch:
 ![image](https://user-images.githubusercontent.com/60980933/121621463-73c9b180-ca29-11eb-9849-955b8d7872fb.png)
 
-Let's see what happens to the mapping by sending this request below. 
-Example: 
+Let's see what happens to the mapping by sending this request below: 
 ```
 GET produce_index/_mapping
 ```
@@ -526,9 +526,7 @@ This request moves data from the produce_index to the produce_v2 index. Now we c
 ![image](https://user-images.githubusercontent.com/60980933/121749036-3b78b080-cac7-11eb-8706-561a1bb61315.png)
 ![image](https://user-images.githubusercontent.com/60980933/121749523-09b41980-cac8-11eb-8214-e986760e5d96.png)
 
-We have one last feature to work on! 
-
-Create a run time field in produce_v2 index. 
+**Step 1:Create a run time field and add it to the mapping of the existing index.** 
 
 Syntax:
 ```
@@ -563,18 +561,18 @@ Expected response from Elasticsearch:
 Elasticsearch successfully adds runtime field to the mapping. 
 ![image](https://user-images.githubusercontent.com/60980933/121744031-8393d500-cabf-11eb-850c-2e13cf79a92a.png)
 
-Check the mapping:
+**Step 2: Check the mapping:**
 ```
 GET produce_v2/_mapping
 ```
 Expected response from Elasticsearch:
 
-Elasticsearch adds runtime field to the mapping up top. Note that the runtime field is not listed under properties. This is because the runtime field is not indexed!! The runtime field total is only created and calculated at runtime as you execute your request. 
+Elasticsearch adds a runtime field to the mapping up top. Note that the runtime field is not listed under properties. This is because the runtime field is not indexed!! The runtime field total is only created and calculated at runtime as you execute your request. 
 
 ![image](https://user-images.githubusercontent.com/60980933/121744102-a1613a00-cabf-11eb-98f0-15c25ab97773.png)
 ![image](https://user-images.githubusercontent.com/60980933/121744120-a7efb180-cabf-11eb-9a7b-3e38e83297e3.png)
 
-Run a sum aggregation on the field total in the produce_v2 index. 
+**Step 3:Run a sum aggregation on the field total in the produce_v2 index.** 
 
 Syntax:
 ```
@@ -605,8 +603,8 @@ GET produce_v2/_search
 }
 ```
 Expected response from Elasticsearch:
-![image](https://user-images.githubusercontent.com/60980933/121706279-b673a400-ca92-11eb-9a5a-4d85699d661b.png)
-![image](https://user-images.githubusercontent.com/60980933/121706366-cc816480-ca92-11eb-9a84-e9d20c3b588d.png)
-![image](https://user-images.githubusercontent.com/60980933/121706402-d4410900-ca92-11eb-8241-ae10cd68f7d2.png)
+![image](https://user-images.githubusercontent.com/60980933/121815555-50268700-cc34-11eb-8fb4-8112cb8e0806.png)
 
-For more information on runtime fields, check out this [blog](https://www.elastic.co/blog/introducing-elasticsearch-runtime-fields) 
+`Runtime field` is only created and calculated when the request is being executed. `Runtime fields` are not indexed so these do not take up disk space.  We also didn’t have to update the mapping and reindex in order to add a new field to existing documents. 
+
+For more information on runtime fields, check out this [blog](https://www.elastic.co/blog/introducing-elasticsearch-runtime-fields)! 
