@@ -66,6 +66,7 @@ POST temp_index/_doc
     "vendor_location": "Whangarei, New Zealand",
     "preferred_vendor": true
   }
+}
 ```
 Expected response from Elasticsearch:
 
@@ -86,7 +87,7 @@ When a user does not define mapping in advance, Elasticsearch creates or updates
 
 With `dynamic mapping`, Elasticsearch looks at each field and tries to infer the data type from the field content. Then, it assigns a type to each field and creates a list of field names and types known as mapping.  
 
-Depending on the assigned field type, each field is indexed and primed for different types of search(full text search, aggregations, sorting). This is why mapping plays an important role in how Elasticsearch stores and searches for data. 
+Depending on the assigned field type, each field is indexed and primed for different types of requests(full text search, aggregations, sorting). This is why mapping plays an important role in how Elasticsearch stores and searches for data. 
 
 ### View the Mapping 
 Syntax:
@@ -112,7 +113,7 @@ There are two kinds of string data types:
 1. Text
 2. Keyword
 
-By default, every string gets mapped twice as a text field and as a keyword multi-field. Each data type is primed for different types of searches. 
+By default, every string gets mapped twice as a text field and as a keyword multi-field. Each data type is primed for different types of requests. 
 
 `Text` field type is designed for full-text searches. 
 
@@ -149,9 +150,10 @@ For each document, the document id along with the field value(original string) a
 ![image](https://user-images.githubusercontent.com/60980933/121603436-fccef180-ca05-11eb-817e-cb77b46ae969.png)
 
 When Elasticsearch dynamically creates a mapping for you, it does not know what you want to use a string for so it maps all strings to both field types. 
-In case where you do not need both field types, the default setting is wasteful because it slows down indexing and takes up more disk space.  Defining our own mapping could help us store and search data more efficiently.
 
-Defining our own mapping takes more planning because we need to decide what type of actions we want to perform on these fields. With this in mind, we can designate which string fields will only be used for full text search or only for aggregation or be able to support both options. 
+In case where you do not need both field types, the default setting is wasteful because it slows down indexing and takes up more disk space.  
+
+Defining our own mapping could help us store and search data more efficiently.
 
 ### Mapping Exercise
 
@@ -241,7 +243,7 @@ The test_index has been successfully created.
 
 Syntax:
 ```
-GET Name-of-test-index/_mapping
+GET Name-the-index-whose-mapping-you-want-to-view/_mapping
 ```
 
 Example:
@@ -301,7 +303,7 @@ The optimized mapping should look like the following:
 ```
 ![image](https://user-images.githubusercontent.com/60980933/122103954-68350c80-cdd4-11eb-82c4-83b47bc364dc.png)
 
-**Step 4: Create a new index with the customized mapping from step 3.** 
+**Step 4: Create a new index with the optimized mapping from step 3.** 
 
 Syntax:
 ```
@@ -586,12 +588,17 @@ Elasticsearch adds a `runtime field` to the mapping up top. Note that the `runti
 ![image](https://user-images.githubusercontent.com/60980933/121744102-a1613a00-cabf-11eb-98f0-15c25ab97773.png)
 ![image](https://user-images.githubusercontent.com/60980933/121744120-a7efb180-cabf-11eb-9a7b-3e38e83297e3.png)
 
-**Step 3:Run a sum aggregation on the field total in the produce_v2 index.** 
+**Step 3: Run a request on the `runfield` to see it perform its magic!** 
+
+Please note that the following request does not aggregate the monthly expense here. We are running a simple aggregation request to demonstrate how `runtime field` works!  
+
+The following request runs a sum aggregation against the `runtime field` total of all documents in our index. 
 
 Syntax:
 ```
 GET Enter_name_of_the_index_here/_search
 {
+  "size": 0,
   "aggs": {
     "Name your aggregations here": {
       "Specify the aggregation type here": {
@@ -607,7 +614,7 @@ Example:
 GET produce_v2/_search
 {
   "size": 0,
-  "aggregations": {
+  "aggs": {
     "total_expense": {
       "sum": {
         "field": "total"
@@ -618,10 +625,10 @@ GET produce_v2/_search
 ```
 Expected response from Elasticsearch:
 
-When this request is sent, a `Runtime field` called total is created and calculated for documents within scope of our request. Then, the sum aggregation requests is performed on the field total to yield total expense. 
+When this request is sent, a `Runtime field` called total is created and calculated for documents within the scope of our request(entire index). Then, the sum aggregation is ran on the field total of documents in question. 
 
 ![image](https://user-images.githubusercontent.com/60980933/121815555-50268700-cc34-11eb-8fb4-8112cb8e0806.png)
 
-`Runtime field` is only created and calculated when the request is being executed. `Runtime fields` are not indexed so these do not take up disk space.  We also didn’t have to reindex in order to add a new field to existing documents. 
+`Runtime field` is only created and calculated when the request is being executed. `Runtime fields` are not indexed so these do not take up disk space.  We also didn’t have to reindex in order to add a new field to existing documents.
 
 For more information on runtime fields, check out this [blog](https://www.elastic.co/blog/introducing-elasticsearch-runtime-fields)! 
