@@ -198,7 +198,7 @@ Defining our own mapping could help us store and search data more efficiently.
 
 ### Defining your own mapping
 **Rules**
-1. If you do not define a mapping ahead of time, Elastcisearch dynamically creates the mapping for you.
+1. If you do not define a mapping ahead of time, Elasticsearch dynamically creates the mapping for you.
 2. If you do decide to define your own mapping, you can do so at index creation.
 3. ONE mapping is defined per index. Once the index has been created, we can only add *new* fields to a mapping. We CANNOT change the mapping of an *existing* field. 
 4. If you must change the type of an existing field, you must create a new index with the desired mapping, then reindex all documents into the new index. 
@@ -373,7 +373,7 @@ GET produce_index/_mapping
 ```
 Expected response from Elasticsearch:
 
-Compared to the dynamic mapping, our customized mappign looks more simple and concise!  The current mapping satisfies the requirements that are marked with green check marks. 
+Compared to the dynamic mapping, our optimized mappign looks more simple and concise!  The current mapping satisfies the requirements that are marked with green check marks. 
 
 ![image](https://user-images.githubusercontent.com/60980933/121619679-3879b380-ca26-11eb-9ac9-ed19a52c05c2.png)
 ![image](https://user-images.githubusercontent.com/60980933/121619466-e5076580-ca25-11eb-8c59-ec2caf3ddb50.png)
@@ -457,6 +457,7 @@ Remember, you CANNOT change the mapping of an *existing* field. If you do need t
 **STEP 1: Create a new index(produce_v2) with the latest mapping.**
 
 We removed the enabled parameter from the field botanical_name and changed its type to text. 
+
 Example:
 ```
 PUT produce_v2
@@ -511,7 +512,7 @@ Elasticsearch creates a new index(produce_v2) with the latest mapping.
 
 If you check the mapping, you will see that the botanical_name field has been typed as text. 
 
-*View the mapping of produce_v2:*
+**View the mapping of produce_v2:**
 ```
 GET produce_v2/_mapping
 ```
