@@ -635,7 +635,8 @@ When this request is sent, a `Runtime field` called total is created and calcula
 For more information on runtime fields, check out this [blog](https://www.elastic.co/blog/introducing-elasticsearch-runtime-fields)! 
 
 ### Questions from the workshop
-Q:  If possible please explain the _meta in mapping which was part of previous video.
+**Q:  If possible please explain the _meta in mapping which was part of previous video.**
+
 A: Of course! _meta in mapping this question is referring to [workshop part 4](https://github.com/LisaHJung/Part-4-Running-Aggregations-with-Elasticsearch-and-Kibana).
 
 ![image](https://user-images.githubusercontent.com/60980933/122953873-3247d900-d33c-11eb-8c77-d3f344ddbf43.png)
@@ -646,12 +647,15 @@ So the _meta field was automatically created by the ml file data visualizer. Thi
 
 The _meta field is optional and deleting the _meta field will not affect the mapping in any way whatsoever. I am going to delete this field in my part 4 workshop repo as it has been causing a lot of confusion! 
 
-Q:  After you create a new mapping, how do you configure your ingest to use the new mapping?
+**Q:  After you create a new mapping, how do you configure your ingest to use the new mapping?**
+
+
 A: I should have asked for clarification as this question can be interpreted in many different ways. 
 
 If I didn't interpret it correctly, please let me know via Twitter @LisaHJung and I will add the answer to this repo! 
 
 If you were referring to a situation where you have an old index with outdated mapping that needed to be changed:
+
 Remember, we cannot change the mapping of an existing field. Even if you add a new field to a mapping, it only adds the new field to the list of field names and types. It does not add the new field to documents that have been indexed prior to adding a new field to the mapping.
 
 You must create a new index with the desired mapping, then reindex documents from the old index to the new one, and direct requests to the new index! 
