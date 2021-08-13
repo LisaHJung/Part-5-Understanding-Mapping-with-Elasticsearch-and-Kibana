@@ -4,7 +4,7 @@ Welcome to the Beginner's Crash Course to Elastic Stack!
 
 This repo contains all resources shared during Part 5: Understanding Mapping with Elasticsearch and Kibana.
 
-Have you ever encountered an error “Field type is not supported for [whatever you are trying to do with Elasticsearch]”?
+Have you ever encountered the error “Field type is not supported for [whatever you are trying to do with Elasticsearch]”?
 
 The most likely culprit of this error is the mapping of your index!
 
@@ -30,9 +30,7 @@ This workshop is a part of the Beginner's Crash Course to Elastic Stack series. 
 
 [Presentation Slides](https://github.com/LisaHJung/Part-5-Understanding-Mapping-with-Elasticsearch-and-Kibana/blob/main/Part%205_%20Understanding%20Mapping%20with%20Elasticsearch%20and%20Kibana.pdf)
 
-[Elastic America Virtual Chapter](https://community.elastic.co/amer-virtual/): 
-
-Want to attend live workshops? Join the Elastic Americal Virtual Chapter to get the deets!
+[What's next?](https://github.com/LisaHJung/Part-6-Troubleshooting-Beginner-Level-Elasticsearch-Errors) Eager to continue your learning after mastering the concept from this workshop? Move on to Part 6: Troubleshooting Beginner Level Elasticsearch Errors [here](https://github.com/LisaHJung/Part-6-Troubleshooting-Beginner-Level-Elasticsearch-Errors)!
 
 ## What is a Mapping?
 ![image](https://user-images.githubusercontent.com/60980933/121580875-7953d700-c9ea-11eb-8a4c-015ea238540e.png)
@@ -102,7 +100,7 @@ GET temp_index/_mapping
 ```
 Expected response from Elasticsearch:
 
-Elasticsearch will return the mapping of the temp_index. It lists all the fields of the document in an alphabetical order and lists the type of each field(text, keyword, long, float, date, boolean and etc). 
+Elasticsearch returns the mapping of the temp_index. It lists all the fields of the document in an alphabetical order and lists the type of each field(text, keyword, long, float, date, boolean and etc). 
 
 ![image](https://user-images.githubusercontent.com/60980933/121591969-5c71d080-c9f7-11eb-95dc-70f04276929a.png)
 ![image](https://user-images.githubusercontent.com/60980933/121592051-76131800-c9f7-11eb-8820-d3d2b39e1e4f.png)
@@ -147,28 +145,28 @@ The same process occurs every time you index a new document.
 
 `Keyword` field is suited to perform these actions because it uses a data structure called `doc values` to store data. 
 
-For each document, the document id along with the field value(original string) are added to a table. This data structure(`doc values`) is designed for actions that require looking up the document ID to find the values it has in its fields.
+For each document, the document id along with the field value(original string) are added to the table. This data structure(`doc values`) is designed for actions that require looking up the document ID to find the values it has in its fields.
 
 ![image](https://user-images.githubusercontent.com/60980933/121603436-fccef180-ca05-11eb-817e-cb77b46ae969.png)
 
 When Elasticsearch dynamically creates a mapping for you, it does not know what you want to use a string for so it maps all strings to both field types. 
 
-In case where you do not need both field types, the default setting is wasteful because it slows down indexing and takes up more disk space.  
+In cases where you do not need both field types, the default setting is wasteful. Since both field types require creating either an inverted index or doc values, creating both field types for unnecessary fields will slow down indexing and take up more disk space.
 
-Defining our own mapping could help us store and search data more efficiently.
+This is why we define our own mapping as it helps us store and search data more efficiently.
 
 ### Mapping Exercise
 
 **Project**: Build an app for a client who manages a produce warehouse 
 
 **This app must enable users to:** 
-1. Search for produce name, country of origin and description
+1. search for produce name, country of origin and description
 
-2. Identify top countries of origin with the most frequent purchase history
+2. identify top countries of origin with the most frequent purchase history
 
-3. Sort produce by produce type(Fruit or Vegetable)
+3. sort produce by produce type(Fruit or Vegetable)
 
-4. Get the summary of monthly expense
+4. get the summary of monthly expense
 
 **Sample data**
 ```
@@ -238,7 +236,7 @@ POST test_index/_doc
 ```
 Expected response from Elasticsearch:
 
-The test_index has been successfully created. 
+The test_index is successfully created. 
 ![image](https://user-images.githubusercontent.com/60980933/121616770-c81c6380-ca20-11eb-9f3a-593e61eff319.png)
 
 **Step 2: View the dynamic mapping** 
@@ -254,11 +252,11 @@ GET test_index/_mapping
 ```
 Expected response from Elasticsearch:
 
-Elasticsearch will display the mapping it has created. It lists the fields in alphabetical order. This document is identical to the one we indexed into temp_index. To save space, the screenshots of the mapping has not been included here. 
+Elasticsearch will display the mapping it has created. It lists the fields in an alphabetical order. This document is identical to the one we indexed into the temp_index. To save space, the screenshots of the mapping has not been included here. 
 
 **Step 3: Edit the mapping**
 
-Copy and paste the mapping from step 2 into the Kibana console. From the pasted results, remove the test index along with its opening and closing brackets. Edit the mapping to satisfy the requirements of your use case.  
+Copy and paste the mapping from step 2 into the Kibana console. From the pasted results, remove the "test_index" along with its opening and closing brackets. Then, edit the mapping to satisfy the requirements outlined in the figure below.
 
 ![image](https://user-images.githubusercontent.com/60980933/122103275-ad0c7380-cdd3-11eb-9a74-babe7442e5b3.png)
 
@@ -375,7 +373,7 @@ GET produce_index/_mapping
 ```
 Expected response from Elasticsearch:
 
-Compared to the dynamic mapping, our optimized mappign looks more simple and concise!  The current mapping satisfies the requirements that are marked with green check marks. 
+Compared to the `dynamic mapping`, our optimized mapping looks more simple and concise!  The current mapping satisfies the requirements that are marked with green check marks. 
 
 ![image](https://user-images.githubusercontent.com/60980933/121619679-3879b380-ca26-11eb-9ac9-ed19a52c05c2.png)
 ![image](https://user-images.githubusercontent.com/60980933/121619466-e5076580-ca25-11eb-8c59-ec2caf3ddb50.png)
@@ -386,7 +384,7 @@ Compared to the dynamic mapping, our optimized mappign looks more simple and con
 
 For simplicity's sake, we will index two documents. 
 
-*Index first document*
+*Index the first document*
 
 ```
 POST produce_index/_doc
@@ -409,12 +407,12 @@ POST produce_index/_doc
 ```
 Expected response from Elasticsearch:
 
-Elasticsearch has successfully indexed the first document. 
+Elasticsearch successfully indexes the first document. 
 ![image](https://user-images.githubusercontent.com/60980933/121621403-5563b600-ca29-11eb-8ee9-83686a937fd2.png)
 
-*Index second document*
+*Index the second document*
 
-The second document has almost identical fields as the first document except that it has an extra field called organic set to true!
+The second document has almost identical fields as the first document except that it has an extra field called "organic" set to true!
 ```
 POST produce_index/_doc
 {
@@ -437,7 +435,7 @@ POST produce_index/_doc
 ```
 Expected response from Elasticsearch:
 
-Elasticsearch has successfully indexed the second document. 
+Elasticsearch successfully indexes the second document. 
 ![image](https://user-images.githubusercontent.com/60980933/121621463-73c9b180-ca29-11eb-9849-955b8d7872fb.png)
 
 Let's see what happens to the mapping by sending this request below: 
@@ -446,19 +444,19 @@ GET produce_index/_mapping
 ```
 Expected response from Elasticsearch:
 
-The new field(organic) and its field type(boolean) have been added to the mapping. This is in line with the rules of mapping we discussed earlier since you can add *new* fields to the mapping. We just cannot change the mapping of an *existing* field! 
+The new field("organic") and its field type(boolean) have been added to the mapping. This is in line with the rules of mapping we discussed earlier since you can add *new* fields to the mapping. We just cannot change the mapping of an *existing* field! 
 
 ![image](https://user-images.githubusercontent.com/60980933/121694928-d2257d00-ca87-11eb-9141-77143d59081a.png)
 ![image](https://user-images.githubusercontent.com/60980933/121694969-db164e80-ca87-11eb-9ddf-479af3077c46.png)
 
 #### What if you do need to make changes to the field type? 
-Let's say your client changed his mind. He wants to run only full text search on the field botanical name we disabled earlier. 
+Let's say your client changed his mind. He wants to run only full text search on the field "botanical_name" we disabled earlier. 
 
-Remember, you CANNOT change the mapping of an *existing* field. If you do need to make changes to the existing field, you must create a new index with the desired mapping, then reindex all documents into the new index. 
+Remember, you CANNOT change the mapping of an *existing* field. If you do need to make changes to an existing field, you must create a new index with the desired mapping, then reindex all documents into the new index. 
 
 **STEP 1: Create a new index(produce_v2) with the latest mapping.**
 
-We removed the enabled parameter from the field botanical_name and changed its type to text. 
+We removed the "enabled" parameter from the field "botanical_name" and changed its type to "text". 
 
 Example:
 ```
@@ -512,7 +510,7 @@ Expected response from Elasticsearch:
 Elasticsearch creates a new index(produce_v2) with the latest mapping. 
 ![image](https://user-images.githubusercontent.com/60980933/121725821-fb093a80-caa6-11eb-8e76-aa84704fb951.png)
 
-If you check the mapping, you will see that the botanical_name field has been typed as text. 
+If you check the mapping, you will see that the filed "botanical_name" has been typed as text. 
 
 **View the mapping of produce_v2:**
 ```
@@ -522,7 +520,7 @@ Expected response from Elasticsearch:
 ![image](https://user-images.githubusercontent.com/60980933/121725730-e036c600-caa6-11eb-8b9d-5a9ca0a72a3c.png)
 ![image](https://user-images.githubusercontent.com/60980933/121725765-e88f0100-caa6-11eb-9610-97cbf980e6c2.png)
 
-**STEP 2: Reindex the data from original index(produce_index) to the one you just created(produce_v2).**
+**STEP 2: Reindex the data from the original index(produce_index) to the one you just created(produce_v2).**
 ```
 POST _reindex
 {
@@ -534,9 +532,9 @@ POST _reindex
   }
 }
 ```
-Expected response form Elasticsearch:
+Expected response from Elasticsearch:
 
-This request moves data from the produce_index to the produce_v2 index. produce_v2 index can now be used to run the requests that the client has specified. 
+This request reindexes data from the produce_index to the produce_v2 index. The produce_v2 index can now be used to run the requests that the client has specified.
 
 ![image](https://user-images.githubusercontent.com/60980933/121726550-ee391680-caa7-11eb-89a9-be1d4416e0e3.png)
 
@@ -586,12 +584,13 @@ GET produce_v2/_mapping
 ```
 Expected response from Elasticsearch:
 
-Elasticsearch adds a `runtime field` to the mapping up top. Note that the `runtime field` is not listed under properties. This is because `runtime field` is not indexed! The `runtime field` total is only created and calculated at runtime as you execute your request. 
+Elasticsearch adds a `runtime field` to the mapping(red box).
 
-![image](https://user-images.githubusercontent.com/60980933/121744102-a1613a00-cabf-11eb-98f0-15c25ab97773.png)
-![image](https://user-images.githubusercontent.com/60980933/121744120-a7efb180-cabf-11eb-9a7b-3e38e83297e3.png)
+![image](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/yi1u4cpx7gl65udiuvr3.png)
 
-**Step 3: Run a request on the `runfield` to see it perform its magic!** 
+Note that the `runtime field` is not listed under "properties" object which includes the fields in our documents. This is because the `runtime field` "total" is not indexed!
+
+**Step 3: Run a request on the `runtime field` to see it perform its magic!** 
 
 Please note that the following request does not aggregate the monthly expense here. We are running a simple aggregation request to demonstrate how `runtime field` works!  
 
@@ -628,13 +627,13 @@ GET produce_v2/_search
 ```
 Expected response from Elasticsearch:
 
-When this request is sent, a `Runtime field` called total is created and calculated for documents within the scope of our request(entire index). Then, the sum aggregation is ran on the field total of documents in question. 
+When this request is sent, a `runtime field` called "total" is created and calculated for documents within the scope of our request(entire index). Then, the sum aggregation is ran on the field "total" over all documents in our index.
 
 ![image](https://user-images.githubusercontent.com/60980933/121815555-50268700-cc34-11eb-8fb4-8112cb8e0806.png)
 
-`Runtime field` is only created and calculated when the request is being executed. `Runtime fields` are not indexed so these do not take up disk space.  We also didn’t have to reindex in order to add a new field to existing documents.
+The `runtime field` is only created and calculated when a request made on the `runtime field` is being executed. `Runtime fields` are not indexed so these do not take up disk space.  
 
-For more information on runtime fields, check out this [blog](https://www.elastic.co/blog/introducing-elasticsearch-runtime-fields)! 
+We also did not have to reindex in order to add a new field to existing documents. For more information on runtime fields, check out this [blog](https://www.elastic.co/blog/introducing-elasticsearch-runtime-fields)! 
 
 ### Questions from the workshop
 **Q:  If possible please explain the _meta in mapping which was part of previous video.**
