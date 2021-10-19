@@ -109,11 +109,11 @@ Elasticsearch returns the mapping of the temp_index. It lists all the fields of 
 For the list of all field types, click [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html)!
 
 ### Indexing Strings 
-There are two kinds of string data types:
+There are two kinds of string field types:
 1. Text
 2. Keyword
 
-By default, every string gets mapped twice as a text field and as a keyword multi-field. Each data type is primed for different types of requests. 
+By default, every string gets mapped twice as a text field and as a keyword multi-field. Each field type is primed for different types of requests. 
 
 `Text` field type is designed for full-text searches. 
 
