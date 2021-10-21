@@ -449,7 +449,7 @@ The new field("organic") and its field type(boolean) have been added to the mapp
 ![image](https://user-images.githubusercontent.com/60980933/121694928-d2257d00-ca87-11eb-9141-77143d59081a.png)
 ![image](https://user-images.githubusercontent.com/60980933/121694969-db164e80-ca87-11eb-9ddf-479af3077c46.png)
 
-#### What if you do need to make changes to the field type? 
+#### What if you do need to make changes to the mapping of an existing field? 
 Let's say your client changed his mind. He wants to run only full text search on the field "botanical_name" we disabled earlier. 
 
 Remember, you CANNOT change the mapping of an *existing* field. If you do need to make changes to an existing field, you must create a new index with the desired mapping, then reindex all documents into the new index. 
