@@ -26,7 +26,11 @@ This workshop is a part of the Beginner's Crash Course to Elastic Stack series. 
 
 [Instructions](https://dev.to/elastic/downloading-elasticsearch-and-kibana-macos-linux-and-windows-1mmo) for downloading Elasticsearch and Kibana
 
-[Recording of the workshop](https://www.youtube.com/watch?v=FQAHDrVwfok&amp;t=37s)
+[Video recording of the workshop](https://www.youtube.com/watch?v=FQAHDrVwfok&amp;t=37s)
+
+[Mini Beginner's Crash Course to Elasticsearch & Kibana playlist](https://ela.st/mini-beginners-crash-course)
+
+Do you prefer learning by watching shorter videos? Check out this playlist to watch short clips of beginner's crash course full length workshops. Season 2 clips will be uploaded here in the future!
 
 [Presentation Slides](https://github.com/LisaHJung/Part-5-Understanding-Mapping-with-Elasticsearch-and-Kibana/blob/main/Part%205_%20Understanding%20Mapping%20with%20Elasticsearch%20and%20Kibana.pdf)
 
